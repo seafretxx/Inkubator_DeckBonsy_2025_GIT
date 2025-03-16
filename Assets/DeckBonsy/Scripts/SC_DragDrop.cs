@@ -2,11 +2,13 @@ using UnityEngine;
 
 public class SC_Roman_Elite : MonoBehaviour
 {
+    private GameObject Canvas;
+    
     private bool IsDragging = false;
     
     void Start()
     {
-        
+       
     }
 
     public void StartDrag()
@@ -24,7 +26,7 @@ public class SC_Roman_Elite : MonoBehaviour
         if (IsDragging)
         {
             transform.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-
+          
         }
     }
 }
