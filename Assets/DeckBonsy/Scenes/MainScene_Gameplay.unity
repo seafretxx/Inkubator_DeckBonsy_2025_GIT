@@ -514,7 +514,7 @@ MonoBehaviour:
     zoom: 5
   cardPlayConfig:
     playArea: {fileID: 1618420816709909593}
-    destroyOnPlay: 0
+    destroyOnPlay: 1
   eventsConfig:
     OnCardPlayed:
       m_PersistentCalls:
@@ -1236,7 +1236,7 @@ PrefabInstance:
       objectReference: {fileID: 546765830}
     - target: {fileID: -5625559375070804153, guid: 3c6d2d14b192b964bac06ebff31f5d78, type: 3}
       propertyPath: deckCards.Array.size
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: -5625559375070804153, guid: 3c6d2d14b192b964bac06ebff31f5d78, type: 3}
       propertyPath: 'deckCards.Array.data[0]'
@@ -1260,6 +1260,10 @@ PrefabInstance:
       objectReference: {fileID: 1698561971111583616, guid: 500f1b933122646469578032037b43ec, type: 3}
     - target: {fileID: -5625559375070804153, guid: 3c6d2d14b192b964bac06ebff31f5d78, type: 3}
       propertyPath: 'deckCards.Array.data[5]'
+      value: 
+      objectReference: {fileID: 1698561971111583616, guid: 500f1b933122646469578032037b43ec, type: 3}
+    - target: {fileID: -5625559375070804153, guid: 3c6d2d14b192b964bac06ebff31f5d78, type: 3}
+      propertyPath: 'deckCards.Array.data[6]'
       value: 
       objectReference: {fileID: 1698561971111583616, guid: 500f1b933122646469578032037b43ec, type: 3}
     - target: {fileID: 2064542825880368797, guid: 3c6d2d14b192b964bac06ebff31f5d78, type: 3}
