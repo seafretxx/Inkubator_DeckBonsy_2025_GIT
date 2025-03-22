@@ -493,6 +493,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5382299738ef9514c9079bf7778b5de0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  drawCards: {fileID: 0}
   forceFitContainer: 1
   preventCardInteraction: 0
   alignment: 1

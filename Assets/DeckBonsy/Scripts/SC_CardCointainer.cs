@@ -8,6 +8,13 @@ using UnityEngine.UI;
 
 public class CardContainer : MonoBehaviour
 {
+
+
+    [SerializeField]
+    private SC_DrawCards drawCards;
+    
+
+
     [Header("Constraints")]
     [SerializeField]
     private bool forceFitContainer;
@@ -48,12 +55,22 @@ public class CardContainer : MonoBehaviour
     private RectTransform rectTransform;
     private CardWrapper currentDraggedCard;
 
+
+    public void Awake()
+    {
+        drawCards = GameObject.Find("Button").GetComponent<SC_DrawCards>();
+        if (drawCards == null) ;
+    }
+
+
+   
+
     private void Start()
     {
         rectTransform = GetComponent<RectTransform>();
         InitCards();
     }
-
+    
     private void InitCards()
     {
         SetUpCards();
@@ -250,22 +267,64 @@ public class CardContainer : MonoBehaviour
         currentDraggedCard = card;
     }
 
+    //public void OnCardDragEnd()
+    //{
+    //   
+    //   if (IsCursorInPlayArea())
+    //   {
+    //       currentDraggedCard.transform.SetParent(cardPlayConfig.playArea, worldPositionStays: false);
+    //
+    //       eventsConfig?.OnCardPlayed?.Invoke(new CardPlayed(currentDraggedCard));
+    //       if (cardPlayConfig.destroyOnPlay)
+    //       {
+    //           DestroyCard(currentDraggedCard);
+    //       }
+    //   }
+    //   currentDraggedCard = null;
+    // }
     public void OnCardDragEnd()
     {
-       
+        if (currentDraggedCard == null) return;
+
         if (IsCursorInPlayArea())
         {
+            // Dodajemy kartê do play area
+            RectTransform playArea = cardPlayConfig.playArea;
+
+            // Zmieniamy rodzica tej karty
+            currentDraggedCard.transform.SetParent(playArea, worldPositionStays: false);
+
+            // Ustawiamy jej pozycjê na œrodek PlayArea
+            currentDraggedCard.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+
+            // Wy³¹cz sortowanie jeœli trzeba
+            Canvas canvas = currentDraggedCard.GetComponent<Canvas>();
+            if (canvas != null)
+            {
+                canvas.overrideSorting = false;
+            }
+
+            // Event: karta zagrana
             eventsConfig?.OnCardPlayed?.Invoke(new CardPlayed(currentDraggedCard));
+
+            // Usuwamy z rêki
+            cards.Remove(currentDraggedCard);
+
             if (cardPlayConfig.destroyOnPlay)
             {
+                // opcjonalnie: niszczy jeœli taka konfiguracja
                 DestroyCard(currentDraggedCard);
             }
+            Debug.Log("Zagrano kartê: " + currentDraggedCard.name);
+            Debug.Log("PlayerArea: " + cardPlayConfig.playArea.name);
         }
+
         currentDraggedCard = null;
     }
 
     public void DestroyCard(CardWrapper card)
     {
+        drawCards.RemoveCard(card.gameObject);
         cards.Remove(card);
         eventsConfig.OnCardDestroy?.Invoke(new CardDestroy(card));
         Destroy(card.gameObject);
