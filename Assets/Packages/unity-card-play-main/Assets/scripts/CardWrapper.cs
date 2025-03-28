@@ -35,6 +35,10 @@ public class CardWrapper : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     private void Start() {
         canvas = GetComponent<Canvas>();
+        if (canvas != null)
+        {
+            canvas.overrideSorting = false;             //dodane
+        }                                       
     }
 
     private void Update() {

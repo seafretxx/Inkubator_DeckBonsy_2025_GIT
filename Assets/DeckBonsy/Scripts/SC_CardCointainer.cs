@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using config;
@@ -8,6 +9,14 @@ using UnityEngine.UI;
 
 public class CardContainer : MonoBehaviour
 {
+
+   
+
+    [SerializeField]
+    private SC_DrawCards drawCards;
+    
+
+
     [Header("Constraints")]
     [SerializeField]
     private bool forceFitContainer;
@@ -48,13 +57,27 @@ public class CardContainer : MonoBehaviour
     private RectTransform rectTransform;
     private CardWrapper currentDraggedCard;
 
-    private void Start()
+
+    public void Awake()
     {
-        rectTransform = GetComponent<RectTransform>();
-        InitCards();
+        drawCards = GameObject.Find("Button").GetComponent<SC_DrawCards>();
+        if (drawCards == null);
     }
 
-    private void InitCards()
+
+
+
+    private SC_PlayerAreaSetup playerAreaManager;
+
+    private void Start()
+    {
+        playerAreaManager = FindObjectOfType<SC_PlayerAreaSetup>();
+        if (playerAreaManager == null)
+        {
+            Debug.LogError("Nie znaleziono SC_PlayerAreaSetup w scenie!");
+        }
+    }
+private void InitCards()
     {
         SetUpCards();
         SetCardsAnchor();
@@ -161,22 +184,41 @@ public class CardContainer : MonoBehaviour
     {
         if (!allowCardRepositioning || currentDraggedCard == null) return;
 
-        // Get the index of the dragged card depending on its position
-        var newCardIdx = cards.Count(card => currentDraggedCard.transform.position.x > card.transform.position.x);
-        var originalCardIdx = cards.IndexOf(currentDraggedCard);
-        if (newCardIdx != originalCardIdx)
+        // U¿yj "Try-Catch" aby uchwyciæ potencjalne b³êdy zwi¹zane z nieistniej¹cymi indeksami
+        try
         {
-            cards.RemoveAt(originalCardIdx);
-            if (newCardIdx > originalCardIdx && newCardIdx < cards.Count - 1)
+            // Get the index of the dragged card depending on its position
+            var newCardIdx = cards.Count(card => currentDraggedCard.transform.position.x > card.transform.position.x);
+            var originalCardIdx = cards.IndexOf(currentDraggedCard);
+
+            // SprawdŸ, czy nie próbujemy usun¹æ karty, która ju¿ nie istnieje
+            if (originalCardIdx < 0 || originalCardIdx >= cards.Count)
             {
-                newCardIdx--;
+                Debug.LogWarning("Nie uda³o siê znaleŸæ karty o tym indeksie: " + originalCardIdx);
+                return;  // Wychodzimy, jeœli indeks jest poza zakresem
             }
 
-            cards.Insert(newCardIdx, currentDraggedCard);
+            // Jeœli karta siê przemieœci³a, zaktualizuj jej pozycjê w liœcie
+            if (newCardIdx != originalCardIdx)
+            {
+                cards.RemoveAt(originalCardIdx);
+                if (newCardIdx > originalCardIdx && newCardIdx < cards.Count - 1)
+                {
+                    newCardIdx--;
+                }
+
+                cards.Insert(newCardIdx, currentDraggedCard);
+            }
+
+            // Also reorder in the hierarchy
+            currentDraggedCard.transform.SetSiblingIndex(newCardIdx);
         }
-        // Also reorder in the hierarchy
-        currentDraggedCard.transform.SetSiblingIndex(newCardIdx);
+        catch (ArgumentOutOfRangeException e)
+        {
+            Debug.LogError("Wyst¹pi³ b³¹d przy aktualizacji kolejnoœci kart: " + e.Message);
+        }
     }
+
 
     private void SetCardsPosition()
     {
@@ -250,22 +292,71 @@ public class CardContainer : MonoBehaviour
         currentDraggedCard = card;
     }
 
+
     public void OnCardDragEnd()
     {
-       
+        if (currentDraggedCard == null) return;
+
+        
         if (IsCursorInPlayArea())
         {
-            eventsConfig?.OnCardPlayed?.Invoke(new CardPlayed(currentDraggedCard));
-            if (cardPlayConfig.destroyOnPlay)
+
+            RectTransform playArea = cardPlayConfig.playArea;
+            int columnIndex = 0;
+            SC_PlayerAreaSetup playerAreaManager = FindObjectOfType<SC_PlayerAreaSetup>();
+
+
+            playerAreaManager.PlayCardToColumn(currentDraggedCard.gameObject, columnIndex);
+
+
+
+            RectTransform cardRect = currentDraggedCard.GetComponent<RectTransform>();
+            cardRect.localPosition = Vector3.zero;   
+            cardRect.localRotation = Quaternion.identity; 
+            cardRect.localScale = Vector3.one;  
+
+            
+            Debug.Log("Karta przeniesiona do: " + playArea.name);
+            Debug.Log("Pozycja karty: " + cardRect.localPosition);
+
+            
+            Canvas cardCanvas = currentDraggedCard.GetComponent<Canvas>();
+            if (cardCanvas != null)
             {
-                DestroyCard(currentDraggedCard);
+                cardCanvas.enabled = true; 
             }
+
+            
+
+            SC_DrawCards drawCardsScript = FindObjectOfType<SC_DrawCards>();
+            if (drawCardsScript != null)
+            {
+                
+                drawCardsScript.RemoveCard(currentDraggedCard.gameObject);
+            }
+
+            //cards.Remove(currentDraggedCard);
+
+
+            Destroy(currentDraggedCard);
+
+           
+            eventsConfig?.OnCardPlayed?.Invoke(new CardPlayed(currentDraggedCard));
+
+            
+            Debug.Log("Zagrano kartê: " + currentDraggedCard.name);
+            Debug.Log("PlayerArea: " + cardPlayConfig.playArea.name);
+
+            drawCardsScript.UpdateHandCardCount();
         }
+
+        
         currentDraggedCard = null;
     }
 
     public void DestroyCard(CardWrapper card)
     {
+        drawCards.RemoveCard(card.gameObject);
         cards.Remove(card);
         eventsConfig.OnCardDestroy?.Invoke(new CardDestroy(card));
         Destroy(card.gameObject);

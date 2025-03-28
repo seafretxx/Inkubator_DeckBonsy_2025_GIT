@@ -15,7 +15,8 @@ GameObject:
   - component: {fileID: 2959025841151569254}
   - component: {fileID: 2826648249505576727}
   - component: {fileID: 6933325027190993414}
-  m_Layer: 0
+  - component: {fileID: 5573859936883857661}
+  m_Layer: 6
   m_Name: Card1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -209,7 +210,30 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 1
-  m_Constraints: 0
+  m_Constraints: 7
+--- !u!223 &5573859936883857661
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1698561971111583616}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
 --- !u!1 &1890793126048466545
 GameObject:
   m_ObjectHideFlags: 0
@@ -221,7 +245,7 @@ GameObject:
   - component: {fileID: 6854157360045678737}
   - component: {fileID: 3024314569438556243}
   - component: {fileID: 8720403881232194809}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}

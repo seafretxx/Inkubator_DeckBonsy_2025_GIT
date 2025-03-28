@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 117021852781116624}
   - component: {fileID: 6347114237888737509}
   - component: {fileID: 2754906474410279868}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 663532984442061737}
   - component: {fileID: 3120166168090815553}
   - component: {fileID: 2166055767129220854}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Card2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -311,4 +311,4 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 7
