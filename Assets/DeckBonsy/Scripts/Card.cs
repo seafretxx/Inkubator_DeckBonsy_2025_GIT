@@ -8,6 +8,7 @@ public class Card
     public int effectId { get; private set; }
     public int power { get; private set; }
     public CardType cardType { get; private set; }
+    public int points { get; private set; }
 
     public void SetValues(int _id, string _cardName, int _effectId, int _power, CardType _cardType) /// id, name, effectId, type
     {
@@ -16,10 +17,16 @@ public class Card
         effectId = _effectId;
         power = _power;
         cardType = _cardType;
+        points = _points;
     }
 
     public void SetPower(int _power)
     {
         power = _power;
+    }
+
+    public int GetPoints()
+    {
+        return points;
     }
 }

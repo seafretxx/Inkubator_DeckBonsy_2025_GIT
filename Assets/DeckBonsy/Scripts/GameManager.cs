@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -19,6 +20,10 @@ public class GameManager : MonoBehaviour
     [Header("Board References")]
     [SerializeField] private Board playerBoard;
     [SerializeField] private Board enemyBoard;
+
+    [Header("UI")]
+    [SerializeField] private TextMeshProUGUI playerScore;
+    
 
     private void Awake()
     {
@@ -49,9 +54,17 @@ public class GameManager : MonoBehaviour
             chosenCard = chosenColumn = false;
             playerBoard.AddCardToColumn(HandManager.handManager.GetCardByIndex(chosenCardIndex), chosenColumnIndex);
             HandManager.handManager.RemoveCardFromHand(chosenCardIndex);
+            UpdateScores();
         }
     }
-
+    //dupa
+    public void UpdateScores()
+    {
+        int playerPoints = playerBoard.GetPoints();
+       
+        playerScore.text = playerPoints.ToString();
+        
+    }
     public void SetChosenCardIndex(int _chosenCardIndex)
     {
         chosenCard = true;
