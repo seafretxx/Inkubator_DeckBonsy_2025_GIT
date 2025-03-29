@@ -39,17 +39,18 @@ public class Board : MonoBehaviour
             {
                 occupiedBoardSpots[columnIndex, i] = true;
                 placedCards[columnIndex, i] = addedCard.GetComponent<CardContainer>().GetCardInfo();
-                //HandManager.handManager.GetCardObjectByIndex(i).transform.position = Vector3.zero;
                 placedCardsObjects[columnIndex, i] = Instantiate(addedCard, boardSpots[columnIndex, i].transform.position, Quaternion.identity,
                     boardSpots[columnIndex, i]);
 
-                GameManager.gameManager.UpdateScores();
+                GameManager.gameManager.UpdateScores(); 
                 return;
             }
         }
         Debug.Log("Column full!");
     }
-    public bool CheckForEmptyInColumn(int columnIndex)
+
+
+public bool CheckForEmptyInColumn(int columnIndex)
     {
 
         for (int i = 0; i < size; i++)
@@ -115,16 +116,16 @@ public class Board : MonoBehaviour
             {
                 if (occupiedBoardSpots[i, j] && placedCards[i, j] != null)
                 {
-                    // Logowanie, aby upewnić się, że karty mają przypisane punkty
-                    Debug.Log($"Karta z ({i}, {j}) ma {placedCards[i, j].GetPoints()} punktów.");
-                    points += placedCards[i, j].GetPoints();
+                    
+                    points += placedCards[i, j].GetPoints();  
                 }
             }
         }
 
-        Debug.Log($"Masz:  {+ points} punktów");
+        Debug.Log($"Masz: {points} punktów");
         return points;
     }
+
 
 }
 

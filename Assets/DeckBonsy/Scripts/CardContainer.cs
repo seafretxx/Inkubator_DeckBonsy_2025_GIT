@@ -4,6 +4,9 @@ using UnityEngine;
 public class CardContainer : MonoBehaviour
 {
     private Card cardInfo;
+    public CardType cardType; 
+    public int points;
+
     [SerializeField] private int handIndex;
 
     private void Awake()

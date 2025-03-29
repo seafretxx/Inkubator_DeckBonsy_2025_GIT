@@ -20,10 +20,6 @@ public class Card
         points = _points;
     }
 
-    public void SetPower(int _points)
-    {
-        points = _points;
-    }
     public int GetPoints()
     {
         return points;

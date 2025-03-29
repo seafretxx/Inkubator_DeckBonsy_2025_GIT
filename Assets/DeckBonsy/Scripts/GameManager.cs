@@ -58,8 +58,7 @@ public class GameManager : MonoBehaviour
                 HandManager.handManager.RemoveCardFromHand(chosenCardIndex);
                 playerBoard.ListBoard();
                 HandManager.handManager.ListHand();
-                GameManager.gameManager.UpdateScores();  
-                return;
+                
             }
             else
             {
