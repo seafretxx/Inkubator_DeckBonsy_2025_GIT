@@ -36,13 +36,30 @@ public class DeckManager : MonoBehaviour
         //ListDeck();
     }
 
+
     public void MockDeck()
     {
-        for(int i =0;i<startingDeckSize;i++)
+       
+        (string, CardType, int)[] cardData = new (string, CardType, int)[]
         {
-            Card createdCard = new Card();
-            createdCard.SetValues(0, "mock"+i, 0, 0, 0);
-            startingDeck[i] = createdCard;
+        ("Slave 1", CardType.Slave, 3),
+        ("Emperor 1", CardType.Emperor, 6),
+        ("Politician 1", CardType.Politician, 5),   // Senator Kaeso
+        ("Politician 2", CardType.Politician, 4),   // Primus Octavian
+        ("Politician 3", CardType.Politician, 4),   // Pontifex Maximus Aulus 
+        ("Politician 3", CardType.Politician, 4),   // Praetor Magnus
+        ("Soldier 1", CardType.Soldier, 1),         // Roman Solider
+        ("Soldier 2", CardType.Soldier, 2),         // Roman Elite
+        ("Citizen 1", CardType.Citizen, 1)          
+        // + 2 klasy specialne zlodziej i szpieg
+        };
+
+       
+        for (int i = 0; i < cardData.Length; i++)
+        {
+            var (cardName, cardType, points) = cardData[i];
+            startingDeck[i] = new Card(i, cardName, 0, 0, cardType, points);
+            Debug.Log("Card: " + cardName + " Points: " + points);
         }
     }
 
@@ -64,14 +81,17 @@ public class DeckManager : MonoBehaviour
 
     public void DrawCard()
     {
-        if(HandManager.handManager.GetHandSize() >= HandManager.handManager.GetMaxHandSize())
+        if (HandManager.handManager.GetHandSize() >= HandManager.handManager.GetMaxHandSize())
         {
             // Dodać komunikat, że nie można dobrać więcej kart
 
             return;
         }
-        Card temp = cardsInDeck[cardsInDeck.Count-1];
-        cardsInDeck.Remove(temp);
-        HandManager.handManager.AddCardToHand(temp);
+        if (cardsInDeck.Count > 0)
+        {
+            Card temp = cardsInDeck[cardsInDeck.Count - 1];
+            HandManager.handManager.AddCardToHand(temp);
+            cardsInDeck.Remove(temp);
+        }
     }
 }

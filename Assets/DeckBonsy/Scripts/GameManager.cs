@@ -48,13 +48,23 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if(chosenCard&&chosenColumn)
+        if (chosenCard && chosenColumn)
         {
-            Debug.Log(chosenCardIndex + " " + chosenColumnIndex);
-            chosenCard = chosenColumn = false;
-            playerBoard.AddCardToColumn(HandManager.handManager.GetCardByIndex(chosenCardIndex), chosenColumnIndex);
-            HandManager.handManager.RemoveCardFromHand(chosenCardIndex);
-            UpdateScores();
+            if (playerBoard.CheckForEmptyInColumn(chosenColumnIndex))
+            {
+                Debug.Log(chosenCardIndex + " " + chosenColumnIndex);
+                chosenCard = chosenColumn = false;
+                playerBoard.AddCardToColumn(HandManager.handManager.GetCardObjectByIndex(chosenCardIndex), chosenColumnIndex);
+                HandManager.handManager.RemoveCardFromHand(chosenCardIndex);
+                playerBoard.ListBoard();
+                HandManager.handManager.ListHand();
+                GameManager.gameManager.UpdateScores();  
+                return;
+            }
+            else
+            {
+                Debug.Log("Column full! Pick again.");
+            }
         }
     }
     //dupa

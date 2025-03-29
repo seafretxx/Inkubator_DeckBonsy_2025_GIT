@@ -31,21 +31,49 @@ public class Board : MonoBehaviour
         return count;
     }
 
-    public void AddCardToColumn(Card addedCard, int columnIndex)
+    public void AddCardToColumn(GameObject addedCard, int columnIndex)
     {
         for (int i = 0; i < size; i++)
         {
-            if (occupiedBoardSpots[columnIndex,i] == false)
+            if (occupiedBoardSpots[columnIndex, i] == false)
             {
-                occupiedBoardSpots[columnIndex,i] = true;
-                placedCards[columnIndex, i] = addedCard;
-                HandManager.handManager.GetCardObjectByIndex(i).transform.position = Vector3.zero;
-                placedCardsObjects[columnIndex, i] = Instantiate(HandManager.handManager.GetCardObjectByIndex(i), 
-                    boardSpots[columnIndex, i].transform.position, Quaternion.identity, boardSpots[columnIndex,i]);
+                occupiedBoardSpots[columnIndex, i] = true;
+                placedCards[columnIndex, i] = addedCard.GetComponent<CardContainer>().GetCardInfo();
+                //HandManager.handManager.GetCardObjectByIndex(i).transform.position = Vector3.zero;
+                placedCardsObjects[columnIndex, i] = Instantiate(addedCard, boardSpots[columnIndex, i].transform.position, Quaternion.identity,
+                    boardSpots[columnIndex, i]);
+
+                GameManager.gameManager.UpdateScores();
                 return;
             }
         }
         Debug.Log("Column full!");
+    }
+    public bool CheckForEmptyInColumn(int columnIndex)
+    {
+
+        for (int i = 0; i < size; i++)
+        {
+            if (occupiedBoardSpots[columnIndex, i] == false)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void ListBoard()
+    {
+        string s = "";
+        for (int i = 0; i < size; i++)
+        {
+            for (int j = 0; j < size; j++)
+            {
+                s += occupiedBoardSpots[j, i] + " ";
+            }
+            s += "\n";
+        }
+        Debug.Log(s);
     }
 
     private void Awake()
@@ -56,41 +84,47 @@ public class Board : MonoBehaviour
         placedCards = new Card[size, size];
         placedCardsObjects = new GameObject[size, size];
 
-        for (int i = 0; i < size; i++) 
+        for (int i = 0; i < size; i++)
         {
             GameObject newColumn = Instantiate(columnPrefab, Vector3.zero, Quaternion.identity, transform.GetChild(0));
             newColumn.GetComponent<ColumnSpot>().SetColumnIndex(i);
             columns[i] = newColumn.GetComponent<RectTransform>();
-            for (int j = 0; j < size; j++) 
+
+            for (int j = 0; j < size; j++)
             {
                 GameObject newBoardSpot = Instantiate(boardSpotPrefab, Vector3.zero, Quaternion.identity, transform.GetChild(1));
-                boardSpots[i,j] = newBoardSpot.GetComponent<RectTransform>();
+                boardSpots[i, j] = newBoardSpot.GetComponent<RectTransform>();
                 occupiedBoardSpots[i, j] = false;
             }
         }
     }
-    // dupa
-    public int GetPoints()
-    {
-        int points = 0;
-        for (int i = 0; i < size; i++)
-        {
-            for (int j = 0; j < size; j++)
-            {
-                if (occupiedBoardSpots[i, j])
-                {
-                    points++;
-                }
-            }
-        }
-        return points;
-    }
-
 
     private void Start()
     {
 
     }
 
+    // dupa
+    public int GetPoints()
+    {
+        int points = 0;
+
+        for (int i = 0; i < size; i++)
+        {
+            for (int j = 0; j < size; j++)
+            {
+                if (occupiedBoardSpots[i, j] && placedCards[i, j] != null)
+                {
+                    // Logowanie, aby upewnić się, że karty mają przypisane punkty
+                    Debug.Log($"Karta z ({i}, {j}) ma {placedCards[i, j].GetPoints()} punktów.");
+                    points += placedCards[i, j].GetPoints();
+                }
+            }
+        }
+
+        Debug.Log($"Masz:  {+ points} punktów");
+        return points;
+    }
 
 }
+

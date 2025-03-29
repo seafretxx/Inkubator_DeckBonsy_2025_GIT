@@ -10,7 +10,10 @@ public class CardContainer : MonoBehaviour
     {
 
     }
-
+    public Card GetCardInfo()
+    {
+        return cardInfo;
+    }
     public void SetHandIndex(int _handIndex)
     {
         handIndex = _handIndex;

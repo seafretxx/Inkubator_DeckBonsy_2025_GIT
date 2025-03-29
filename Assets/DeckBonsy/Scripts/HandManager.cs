@@ -43,14 +43,18 @@ public class HandManager : MonoBehaviour
             if (positionsOccupied[i] == false)
             {
                 positionsOccupied[i] = true;
-                cardObjects[i] = Instantiate(cardPrefab, positions[currentHandSize].position, Quaternion.identity);
-                cardObjects[i].GetComponent<Transform>().SetParent(positions[currentHandSize].GetComponent<Transform>());
-                cardObjects[i].GetComponent<CardContainer>().SetHandIndex(currentHandSize);
+                cardObjects[i] = Instantiate(cardPrefab, positions[i].position, Quaternion.identity);
+                cardObjects[i].GetComponent<Transform>().SetParent(positions[i].GetComponent<Transform>());
+                cardObjects[i].GetComponent<CardContainer>().SetHandIndex(i);
                 currentHandSize++;
+
+                hand[i] = addedCard;
+
                 return;
             }
         }
     }
+
 
     public void RemoveCardFromHand(int index)
     {
@@ -59,7 +63,15 @@ public class HandManager : MonoBehaviour
         hand[index] = null;
         currentHandSize--;
     }
-
+    public void ListHand()
+    {
+        string s = "";
+        for (int i = 0; i < maxHandSize; i++)
+        {
+            s += positionsOccupied[i];
+        }
+        Debug.Log(s);
+    }
     private void Awake()
     {
         /// Singleton mechanism
