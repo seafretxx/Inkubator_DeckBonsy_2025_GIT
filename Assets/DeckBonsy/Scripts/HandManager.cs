@@ -44,6 +44,7 @@ public class HandManager : MonoBehaviour
             {
                 positionsOccupied[i] = true;
                 cardObjects[i] = Instantiate(cardPrefab, positions[i].position, Quaternion.identity);
+                cardObjects[i].GetComponent<CardContainer>().SetCardInfo(addedCard);
                 cardObjects[i].GetComponent<Transform>().SetParent(positions[i].GetComponent<Transform>());
                 cardObjects[i].GetComponent<CardContainer>().SetHandIndex(i);
                 currentHandSize++;

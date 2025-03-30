@@ -58,7 +58,7 @@ public class GameManager : MonoBehaviour
                 HandManager.handManager.RemoveCardFromHand(chosenCardIndex);
                 playerBoard.ListBoard();
                 HandManager.handManager.ListHand();
-                
+                UpdateScore();
             }
             else
             {
@@ -67,7 +67,7 @@ public class GameManager : MonoBehaviour
         }
     }
     //dupa
-    public void UpdateScores()
+    public void UpdateScore()
     {
         int playerPoints = playerBoard.GetPoints();
        

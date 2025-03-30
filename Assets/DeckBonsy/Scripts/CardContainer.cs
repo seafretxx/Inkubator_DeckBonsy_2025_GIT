@@ -9,13 +9,14 @@ public class CardContainer : MonoBehaviour
 
     [SerializeField] private int handIndex;
 
-    private void Awake()
-    {
-
-    }
     public Card GetCardInfo()
     {
         return cardInfo;
+    }
+
+    public void SetCardInfo( Card _cardInfo)
+    {
+        cardInfo = _cardInfo;
     }
     public void SetHandIndex(int _handIndex)
     {

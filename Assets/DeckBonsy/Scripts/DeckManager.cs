@@ -39,27 +39,26 @@ public class DeckManager : MonoBehaviour
 
     public void MockDeck()
     {
-       
-        (string, CardType, int)[] cardData = new (string, CardType, int)[]
+        // id, name, effectId, points, cardType
+        (int, string, int, int, CardType)[] cardValues = new (int, string, int, int, CardType)[]
         {
-        ("Slave 1", CardType.Slave, 3),
-        ("Emperor 1", CardType.Emperor, 6),
-        ("Politician 1", CardType.Politician, 5),   // Senator Kaeso
-        ("Politician 2", CardType.Politician, 4),   // Primus Octavian
-        ("Politician 3", CardType.Politician, 4),   // Pontifex Maximus Aulus 
-        ("Politician 3", CardType.Politician, 4),   // Praetor Magnus
-        ("Soldier 1", CardType.Soldier, 1),         // Roman Solider
-        ("Soldier 2", CardType.Soldier, 2),         // Roman Elite
-        ("Citizen 1", CardType.Citizen, 1)          
+        (0, "Slave", 0, 1, CardType.Slave),
+        (1, "Emperor", 0, 6, CardType.Emperor),
+        (2, "Kaeso", 0, 5, CardType.Politician),
+        (3, "Octavian", 0, 4, CardType.Politician),
+        (4, "Maximus Aulus", 0, 4, CardType.Politician),
+        (5, "Magnus", 0, 4, CardType.Politician),
+        (6, "Soldier", 0, 1, CardType.Soldier),
+        (7, "Elite Soldier", 0, 2, CardType.Soldier),
+        (8, "Citizen", 0, 1, CardType.Citizen),
+        (9, "Boru", 0, 420, CardType.Citizen)
         // + 2 klasy specialne zlodziej i szpieg
         };
 
-       
-        for (int i = 0; i < cardData.Length; i++)
+        for (int i = 0; i < startingDeckSize; i++)
         {
-            var (cardName, cardType, points) = cardData[i];
-            startingDeck[i] = new Card(i, cardName, 0, 0, cardType, points);
-            Debug.Log("Card: " + cardName + " Points: " + points);
+           
+            startingDeck[i] = new Card(cardValues[i]);
         }
     }
 

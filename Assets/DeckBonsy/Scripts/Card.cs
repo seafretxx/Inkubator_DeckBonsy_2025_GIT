@@ -6,24 +6,53 @@ public class Card
     public int id { get; private set; }
     public string cardName { get; private set; }
     public int effectId { get; private set; }
-    public int power { get; private set; }
-    public CardType cardType { get; private set; }
     public int points { get; private set; }
+    public CardType cardType { get; private set; }
 
-    public Card(int _id, string _cardName, int _effectId, int _power, CardType _cardType, int _points) /// id, name, effectId, type, points
+
+    public Card(int _id, string _cardName, int _effectId, int _points, CardType _cardType) /// id, name, effectId, type, points
     {
         id = _id;
         cardName = _cardName;
         effectId = _effectId;
-        power = _power;
-        cardType = _cardType;
         points = _points;
+        cardType = _cardType;
+       
     }
-
+     public Card((int _id, string _cardName, int _effectId, int _points, CardType _cardType)_card) /// id, name, effectId, type, points
+    {
+        id = _card._id;
+        cardName = _card._cardName;
+        effectId = _card._effectId;
+        points = _card._points;
+        cardType = _card._cardType;
+       
+    }
     public int GetPoints()
     {
         return points;
     }
+   /* public void SetValues(int _id, string _cardName, int _effectId, int _points, CardType _cardType)
+    {
+        id = _id;
+        cardName = _cardName;
+        effectId = _effectId;
+        points = _points;
+        cardType = _cardType;
+    }
 
+    public void SetValues((int _id, string _cardName, int _effectId, int _points, CardType _cardType) _cardValue)
+    {
+        id = _cardValue._id;
+        cardName = _cardValue._cardName;
+        effectId = _cardValue._effectId;
+        points = _cardValue._points;
+        cardType = _cardValue._cardType;
+    }
+    public void SetPoints(int _points)
+    {
+        points = _points;
+    }
 
+    */
 }

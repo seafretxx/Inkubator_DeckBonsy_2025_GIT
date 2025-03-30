@@ -42,7 +42,7 @@ public class Board : MonoBehaviour
                 placedCardsObjects[columnIndex, i] = Instantiate(addedCard, boardSpots[columnIndex, i].transform.position, Quaternion.identity,
                     boardSpots[columnIndex, i]);
 
-                GameManager.gameManager.UpdateScores(); 
+                GameManager.gameManager.UpdateScore(); 
                 return;
             }
         }
@@ -125,7 +125,7 @@ public bool CheckForEmptyInColumn(int columnIndex)
         Debug.Log($"Masz: {points} punktów");
         return points;
     }
-
+    
 
 }
 
