@@ -33,10 +33,10 @@ public class DeckManager : MonoBehaviour
     {
         MockDeck();
         ResetDeck();
-        //ListDeck();
+        ShuffleDeck();
     }
 
-
+    
     public void MockDeck()
     {
         // id, name, effectId, points, cardType
@@ -67,6 +67,16 @@ public class DeckManager : MonoBehaviour
         foreach(Card card in startingDeck)
         {
             cardsInDeck.Add(card);
+        }
+    }
+    private void ShuffleDeck()
+    {
+        for (int i = 0; i < cardsInDeck.Count; i++)
+        {
+            Card temp = cardsInDeck[i];
+            int randomIndex = Random.Range(i, cardsInDeck.Count);
+            cardsInDeck[i] = cardsInDeck[randomIndex];
+            cardsInDeck[randomIndex] = temp;
         }
     }
 

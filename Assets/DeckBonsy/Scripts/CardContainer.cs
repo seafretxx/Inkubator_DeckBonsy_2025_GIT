@@ -25,18 +25,12 @@ public class CardContainer : MonoBehaviour
         {
             pointsText.text = points.ToString();
         }
-        else
-        {
-            Debug.LogWarning("pointsText is not assigned!");
-        }
+        
         if (nameText != null)
         { 
             nameText.text = _cardInfo.cardName;
         }
-        else
-        {
-            Debug.LogWarning("nameText is not assigned!");
-        }
+        
     }
     public void SetHandIndex(int _handIndex)
     {
