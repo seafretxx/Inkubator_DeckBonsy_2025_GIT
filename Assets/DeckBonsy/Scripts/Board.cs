@@ -94,6 +94,17 @@ public class Board : MonoBehaviour
                 placedCards[columnIndex, i] = null;
             }
         }
+        for (int i = 1; i < size; i++)
+        {
+            if (occupiedBoardSpots[columnIndex, i] == true && occupiedBoardSpots[columnIndex, i - 1] == false)
+            {
+                occupiedBoardSpots[columnIndex, i - 1] = true;
+                occupiedBoardSpots[columnIndex, i] = false;
+                placedCardsObjects[columnIndex, i].transform.position = boardSpots[columnIndex, i - 1].position;
+                placedCards[columnIndex, i - 1] = placedCards[columnIndex, i];
+                placedCards[columnIndex, i] = null;
+            }
+        }
     }
 
     public void RemoveCardsFromColumn(int columnIndex, int pointValue)

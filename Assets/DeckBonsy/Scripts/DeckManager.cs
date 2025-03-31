@@ -33,6 +33,7 @@ public class DeckManager : MonoBehaviour
     {
         MockDeck();
         ResetDeck();
+        ShuffleDeck();
         //ListDeck();
     }
 
@@ -69,7 +70,16 @@ public class DeckManager : MonoBehaviour
             cardsInDeck.Add(card);
         }
     }
-
+    private void ShuffleDeck()
+    {
+        for (int i = 0; i < cardsInDeck.Count; i++)
+        {
+            Card temp = cardsInDeck[i];
+            int randomIndex = Random.Range(i, cardsInDeck.Count);
+            cardsInDeck[i] = cardsInDeck[randomIndex];
+            cardsInDeck[randomIndex] = temp;
+        }
+    }
     public void AddCardToDeck(Card addedCard)
     {
         cardsInDeck.Add(addedCard);

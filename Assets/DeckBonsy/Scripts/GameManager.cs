@@ -108,11 +108,15 @@ public class GameManager : MonoBehaviour
     {
         if (isPlayerTurn)
         {
+            Debug.Log("Player 1's turn has ended.");
             isPlayerTurn = false;
+            Debug.Log("Now it's Player 2's turn.");
         }
         else
         {
+            Debug.Log("Player 2's turn has ended.");
             isPlayerTurn = true;
+            Debug.Log("Now it's Player 1's turn.");
         }
     }
 
