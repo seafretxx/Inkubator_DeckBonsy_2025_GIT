@@ -14,6 +14,24 @@ public class Board : MonoBehaviour
     [SerializeField] private Card[,] placedCards;
     [SerializeField] private GameObject[,] placedCardsObjects;
 
+    public int CountScore()
+    {
+        int score = 0;
+
+        for (int i = 0; i < size; i++)
+        {
+            for (int j = 0; j < size; j++)
+            {
+                if (placedCards[i, j] != null)
+                {
+                    score += placedCards[i, j].points;
+                }
+            }
+        }
+
+        return score;
+    }
+
     private int CountType(CardType type)
     {
         int count = 0;
@@ -33,24 +51,24 @@ public class Board : MonoBehaviour
 
     public void AddCardToColumn(GameObject addedCard, int columnIndex)
     {
+        CardContainer addedCardContainer = addedCard.GetComponent<CardContainer>();
         for (int i = 0; i < size; i++)
         {
             if (occupiedBoardSpots[columnIndex, i] == false)
             {
                 occupiedBoardSpots[columnIndex, i] = true;
-                placedCards[columnIndex, i] = addedCard.GetComponent<CardContainer>().GetCardInfo();
+                placedCards[columnIndex, i] = addedCardContainer.GetCardInfo();
                 placedCardsObjects[columnIndex, i] = Instantiate(addedCard, boardSpots[columnIndex, i].transform.position, Quaternion.identity,
                     boardSpots[columnIndex, i]);
-
-                GameManager.gameManager.UpdateScore(); 
+                addedCardContainer.UpdateCard();
+                GameManager.gameManager.PlayedCardTrigger(columnIndex, addedCardContainer.GetCardInfo().points);
                 return;
             }
         }
         Debug.Log("Column full!");
     }
 
-
-public bool CheckForEmptyInColumn(int columnIndex)
+    public bool CheckForEmptyInColumn(int columnIndex)
     {
 
         for (int i = 0; i < size; i++)
@@ -61,6 +79,48 @@ public bool CheckForEmptyInColumn(int columnIndex)
             }
         }
         return false;
+    }
+
+    public void UpdateColumn(int columnIndex)
+    {
+        for (int i = 1; i < size; i++)
+        {
+            if (occupiedBoardSpots[columnIndex, i] == true && occupiedBoardSpots[columnIndex, i - 1] == false)
+            {
+                occupiedBoardSpots[columnIndex, i - 1] = true;
+                occupiedBoardSpots[columnIndex, i] = false;
+                placedCardsObjects[columnIndex, i].transform.position = boardSpots[columnIndex, i - 1].position;
+                placedCards[columnIndex, i - 1] = placedCards[columnIndex, i];
+                placedCards[columnIndex, i] = null;
+            }
+        }
+    }
+
+    public void RemoveCardsFromColumn(int columnIndex, int pointValue)
+    {
+        for (int i = 0; i < size; i++)
+        {
+            if (occupiedBoardSpots[columnIndex, i] == true && placedCards[columnIndex, i].points == pointValue)
+            {
+                RemoveCardFromColumn(columnIndex, i);
+            }
+        }
+        UpdateColumn(columnIndex);
+    }
+
+    private void RemoveCardFromColumn(int columnIndex, int rowIndex)
+    {
+        if (occupiedBoardSpots[columnIndex, rowIndex] == true)
+        {
+            DeckManager.deckManager.AddCardToDeck(placedCards[columnIndex, rowIndex]);
+            occupiedBoardSpots[columnIndex, rowIndex] = false;
+            placedCards[columnIndex, rowIndex] = null;
+            Destroy(placedCardsObjects[columnIndex, rowIndex]);
+        }
+        else
+        {
+            Debug.Log("You just tried removing a card that does not exist.");
+        }
     }
 
     public void ListBoard()
@@ -77,7 +137,7 @@ public bool CheckForEmptyInColumn(int columnIndex)
         Debug.Log(s);
     }
 
-    private void Awake()
+    private void Start()
     {
         columns = new RectTransform[size];
         boardSpots = new RectTransform[size, size];
@@ -89,6 +149,7 @@ public bool CheckForEmptyInColumn(int columnIndex)
         {
             GameObject newColumn = Instantiate(columnPrefab, Vector3.zero, Quaternion.identity, transform.GetChild(0));
             newColumn.GetComponent<ColumnSpot>().SetColumnIndex(i);
+            newColumn.GetComponent<ColumnSpot>().SetIsPlayerBoard(playerBoard);
             columns[i] = newColumn.GetComponent<RectTransform>();
 
             for (int j = 0; j < size; j++)
@@ -100,32 +161,4 @@ public bool CheckForEmptyInColumn(int columnIndex)
         }
     }
 
-    private void Start()
-    {
-
-    }
-
-    // dupa
-    public int GetPoints()
-    {
-        int points = 0;
-
-        for (int i = 0; i < size; i++)
-        {
-            for (int j = 0; j < size; j++)
-            {
-                if (occupiedBoardSpots[i, j] && placedCards[i, j] != null)
-                {
-                    
-                    points += placedCards[i, j].GetPoints();  
-                }
-            }
-        }
-
-        Debug.Log($"Masz: {points} punktów");
-        return points;
-    }
-    
-
 }
-

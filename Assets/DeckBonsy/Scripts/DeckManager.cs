@@ -33,10 +33,9 @@ public class DeckManager : MonoBehaviour
     {
         MockDeck();
         ResetDeck();
-        ShuffleDeck();
+        //ListDeck();
     }
 
-    
     public void MockDeck()
     {
         // id, name, effectId, points, cardType
@@ -51,38 +50,34 @@ public class DeckManager : MonoBehaviour
         (6, "Soldier", 0, 1, CardType.Soldier),
         (7, "Elite Soldier", 0, 2, CardType.Soldier),
         (8, "Citizen", 0, 1, CardType.Citizen),
-        (9, "Boru", 0, 420, CardType.Citizen)
+        (9, "Boru", 0, 36, CardType.Citizen)
         // + 2 klasy specialne zlodziej i szpieg
         };
 
         for (int i = 0; i < startingDeckSize; i++)
         {
-           
-            startingDeck[i] = new Card(cardValues[i]);
+            Card createdCard = new Card();
+            createdCard.SetValues(cardValues[i]);
+            startingDeck[i] = createdCard;
         }
     }
 
     public void ResetDeck()
     {
-        foreach(Card card in startingDeck)
+        foreach (Card card in startingDeck)
         {
             cardsInDeck.Add(card);
         }
     }
-    private void ShuffleDeck()
+
+    public void AddCardToDeck(Card addedCard)
     {
-        for (int i = 0; i < cardsInDeck.Count; i++)
-        {
-            Card temp = cardsInDeck[i];
-            int randomIndex = Random.Range(i, cardsInDeck.Count);
-            cardsInDeck[i] = cardsInDeck[randomIndex];
-            cardsInDeck[randomIndex] = temp;
-        }
+        cardsInDeck.Add(addedCard);
     }
 
     public void ListDeck()
     {
-        foreach(Card card in cardsInDeck)
+        foreach (Card card in cardsInDeck)
         {
             Debug.Log(card.cardName);
         }
@@ -93,7 +88,7 @@ public class DeckManager : MonoBehaviour
         if (HandManager.handManager.GetHandSize() >= HandManager.handManager.GetMaxHandSize())
         {
             // Dodać komunikat, że nie można dobrać więcej kart
-
+            Debug.Log("Max hand size reached!");
             return;
         }
         if (cardsInDeck.Count > 0)
@@ -101,6 +96,7 @@ public class DeckManager : MonoBehaviour
             Card temp = cardsInDeck[cardsInDeck.Count - 1];
             HandManager.handManager.AddCardToHand(temp);
             cardsInDeck.Remove(temp);
+            GameManager.gameManager.EndTurn();
         }
     }
 }

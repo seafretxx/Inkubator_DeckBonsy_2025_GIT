@@ -2,7 +2,13 @@ using UnityEngine;
 
 public class ColumnSpot : MonoBehaviour
 {
+    [SerializeField] private bool isPlayerBoard;
     [SerializeField] private int columnIndex;
+
+    public void SetIsPlayerBoard(bool _isPlayerBoard)
+    {
+        isPlayerBoard = _isPlayerBoard;
+    }
 
     public void SetColumnIndex(int _columnIndex)
     {
@@ -11,7 +17,6 @@ public class ColumnSpot : MonoBehaviour
 
     public void WhenClicked()
     {
-        Debug.Log("YIPPIE!");
-        GameManager.gameManager.SetChosenColumnIndex(columnIndex);
+        GameManager.gameManager.SetChosenColumnIndex(columnIndex, isPlayerBoard);
     }
 }

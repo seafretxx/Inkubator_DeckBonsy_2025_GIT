@@ -1,37 +1,30 @@
 ﻿using System.Collections;
 using UnityEngine;
 using TMPro;
+
 public class CardContainer : MonoBehaviour
 {
     private Card cardInfo;
-    public CardType cardType; 
-    public int points;
-
+    [SerializeField] private bool isPlayerCard;
     [SerializeField] private int handIndex;
-    [SerializeField] private TMP_Text pointsText;
-    [SerializeField] private TMP_Text nameText;
+    [SerializeField] private TextMeshProUGUI handPower;
+    [SerializeField] private TextMeshProUGUI handName;
+
     public Card GetCardInfo()
     {
         return cardInfo;
     }
 
-    public void SetCardInfo( Card _cardInfo)
+    public void SetCardInfo(Card _cardInfo)
     {
         cardInfo = _cardInfo;
-        cardType = _cardInfo.cardType;
-        points = _cardInfo.points;
-
-        if (pointsText != null)
-        {
-            pointsText.text = points.ToString();
-        }
-        
-        if (nameText != null)
-        { 
-            nameText.text = _cardInfo.cardName;
-        }
-        
     }
+
+    public void SetIsPlayerCard(bool _isPlayerCard)
+    {
+        isPlayerCard = _isPlayerCard;
+    }
+
     public void SetHandIndex(int _handIndex)
     {
         handIndex = _handIndex;
@@ -39,22 +32,12 @@ public class CardContainer : MonoBehaviour
 
     public void WhenClicked()
     {
-        Debug.Log("YAY!");
-        GameManager.gameManager.SetChosenCardIndex(handIndex);
+        GameManager.gameManager.SetChosenCardIndex(handIndex, isPlayerCard);
     }
 
-    private void Awake()
+    public void UpdateCard()
     {
-        if (pointsText == null)
-            pointsText = GetComponentInChildren<TMP_Text>();
-        if (nameText == null)
-        {
-            TMP_Text[] allTexts = GetComponentsInChildren<TMP_Text>();
-            foreach (var text in allTexts)
-            {
-                if (text.gameObject.name.Contains("NameTekst")) 
-                    nameText = text;
-            }
-        }
+        handPower.text = "" + cardInfo.points;
+        handName.text = "" + cardInfo.cardName;
     }
 }

@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour
     public static GameManager gameManager { get; private set; }
 
     [Header("Main Variables")]
-    //[SerializeField] private bool isPlayerTurn
+    [SerializeField] private bool isPlayerTurn;
     [SerializeField] private bool gameReady;
     [SerializeField] public int selectedCardIndex;
 
@@ -18,34 +18,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int chosenColumnIndex;
 
     [Header("Board References")]
-    [SerializeField] private Board player1Board;
-    [SerializeField] private Board player2Board;
+    [SerializeField] private Board playerBoard;
+    [SerializeField] private Board enemyBoard;
+    [SerializeField] private TextMeshProUGUI playerScoreCounter;
+    [SerializeField] private TextMeshProUGUI enemyScoreCounter;
 
-    [Header("UI")]
-    //[SerializeField] private TextMeshProUGUI playerScore;
-    [SerializeField] private TextMeshProUGUI player1ScoreText;
-    [SerializeField] private TextMeshProUGUI player2ScoreText;
-
-    private enum TurnState
-    {
-        Player1,
-        Player2
-    }
-    private TurnState currentTurn;
-    private void UpdateTurn()
-    {
-        // Zmiana tury
-        if (currentTurn == TurnState.Player1)
-        {
-            currentTurn = TurnState.Player2;
-        }
-        else
-        {
-            currentTurn = TurnState.Player1;
-        }
-
-        Debug.Log("Current Turn: " + currentTurn.ToString());
-    }
     private void Awake()
     {
         /// Singleton mechanism
@@ -58,86 +35,121 @@ public class GameManager : MonoBehaviour
             {
                 gameManager = this;
             }
-           } 
+        }
     }
-    
+
     private void Start()
     {
-        gameReady = true;
         chosenCard = false;
-        currentTurn = TurnState.Player1;
+        chosenColumn = false;
+        isPlayerTurn = true;
+        gameReady = true;
+        UpdateScore();
     }
 
     private void Update()
     {
-        if (currentTurn == TurnState.Player1)
-
+        if (chosenCard && chosenColumn) // PLAYING A CARD
         {
-            if (chosenCard && chosenColumn)
+            if (isPlayerTurn)
             {
-                if (player1Board.CheckForEmptyInColumn(chosenColumnIndex))
+                if (playerBoard.CheckForEmptyInColumn(chosenColumnIndex))
                 {
                     Debug.Log(chosenCardIndex + " " + chosenColumnIndex);
                     chosenCard = chosenColumn = false;
-                    player1Board.AddCardToColumn(HandManager.handManager.GetCardObjectByIndex(chosenCardIndex), chosenColumnIndex);
+                    playerBoard.AddCardToColumn(HandManager.handManager.GetCardObjectByIndex(chosenCardIndex), chosenColumnIndex);
                     HandManager.handManager.RemoveCardFromHand(chosenCardIndex);
-                    player1Board.ListBoard();
+                    playerBoard.ListBoard();
                     HandManager.handManager.ListHand();
                     UpdateScore();
-                    UpdateTurn();
+                    EndTurn();
                 }
                 else
                 {
+                    chosenCard = chosenColumn = false;
                     Debug.Log("Column full! Pick again.");
                 }
             }
-        }   
-
-        else if (currentTurn == TurnState.Player2)
-        {
-            
-            if (chosenCard && chosenColumn)
+            else
             {
-                if (player2Board.CheckForEmptyInColumn(chosenColumnIndex))
+                if (enemyBoard.CheckForEmptyInColumn(chosenColumnIndex))
                 {
                     Debug.Log(chosenCardIndex + " " + chosenColumnIndex);
                     chosenCard = chosenColumn = false;
-                    player2Board.AddCardToColumn(HandManager.handManager.GetCardObjectByIndex(chosenCardIndex), chosenColumnIndex);
+                    enemyBoard.AddCardToColumn(HandManager.handManager.GetCardObjectByIndex(chosenCardIndex), chosenColumnIndex);
                     HandManager.handManager.RemoveCardFromHand(chosenCardIndex);
-                    player2Board.ListBoard();
+                    enemyBoard.ListBoard();
                     HandManager.handManager.ListHand();
                     UpdateScore();
-                    UpdateTurn(); 
+                    EndTurn();
                 }
                 else
                 {
+                    chosenCard = chosenColumn = false;
                     Debug.Log("Column full! Pick again.");
                 }
             }
         }
-    }   
+    }
 
-    //dupa
+    public void PlayedCardTrigger(int columnIndex, int cardPoints)
+    {
+        if (isPlayerTurn)
+        {
+            enemyBoard.RemoveCardsFromColumn(columnIndex, cardPoints);
+        }
+        else
+        {
+            playerBoard.RemoveCardsFromColumn(columnIndex, cardPoints);
+        }
+    }
+
+    public void EndTurn()
+    {
+        if (isPlayerTurn)
+        {
+            isPlayerTurn = false;
+        }
+        else
+        {
+            isPlayerTurn = true;
+        }
+    }
+
+    public bool GetPlayerTurn()
+    {
+        return isPlayerTurn;
+    }
+
+    public void SetChosenCardIndex(int _chosenCardIndex, bool _isPlayerCard)
+    {
+        if (isPlayerTurn == _isPlayerCard)
+        {
+            chosenCard = true;
+            chosenCardIndex = _chosenCardIndex;
+        }
+        else
+        {
+            Debug.Log("Not your turn!");
+        }
+    }
+
+    public void SetChosenColumnIndex(int _chosenColumnIndex, bool _isPlayerBoard)
+    {
+        if (isPlayerTurn == _isPlayerBoard)
+        {
+            chosenColumn = true;
+            chosenColumnIndex = _chosenColumnIndex;
+        }
+        else
+        {
+            Debug.Log("Not your turn!");
+        }
+    }
+
     public void UpdateScore()
     {
-        int player1Points = player1Board.GetPoints();
-        int player2Points = player2Board.GetPoints();
-
-        player1ScoreText.text = player1Points.ToString();
-        player2ScoreText.text = player2Points.ToString();
-
+        playerScoreCounter.text = ("Your score:\n" + playerBoard.CountScore());
+        enemyScoreCounter.text = ("Enemy score:\n" + enemyBoard.CountScore());
     }
-    public void SetChosenCardIndex(int _chosenCardIndex)
-    {
-        chosenCard = true;
-        chosenCardIndex = _chosenCardIndex;
-    }
- 
-    public void SetChosenColumnIndex(int _chosenColumnIndex)
-    {
-        chosenColumn = true;
-        chosenColumnIndex = _chosenColumnIndex;
-    }
- 
-
 }

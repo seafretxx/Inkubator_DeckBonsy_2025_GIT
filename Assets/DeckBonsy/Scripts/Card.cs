@@ -9,30 +9,7 @@ public class Card
     public int points { get; private set; }
     public CardType cardType { get; private set; }
 
-
-    public Card(int _id, string _cardName, int _effectId, int _points, CardType _cardType) /// id, name, effectId, type, points
-    {
-        id = _id;
-        cardName = _cardName;
-        effectId = _effectId;
-        points = _points;
-        cardType = _cardType;
-       
-    }
-     public Card((int _id, string _cardName, int _effectId, int _points, CardType _cardType)_card) /// id, name, effectId, type, points
-    {
-        id = _card._id;
-        cardName = _card._cardName;
-        effectId = _card._effectId;
-        points = _card._points;
-        cardType = _card._cardType;
-       
-    }
-    public int GetPoints()
-    {
-        return points;
-    }
-   /* public void SetValues(int _id, string _cardName, int _effectId, int _points, CardType _cardType)
+    public void SetValues(int _id, string _cardName, int _effectId, int _points, CardType _cardType)
     {
         id = _id;
         cardName = _cardName;
@@ -49,10 +26,9 @@ public class Card
         points = _cardValue._points;
         cardType = _cardValue._cardType;
     }
+
     public void SetPoints(int _points)
     {
         points = _points;
     }
-
-    */
 }

@@ -2,77 +2,18 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System;
 
 public class HandManager : MonoBehaviour
 {
     public static HandManager handManager { get; private set; }
 
     [Header("Main Variables")]
-    [SerializeField]
-    public const int maxHandSize = 3;
-    private int currentHandSize = 0;
-    [SerializeField] private RectTransform[] positions;
-    [SerializeField] private bool[] positionsOccupied;
-    [SerializeField] private GameObject[] cardObjects;
-    [SerializeField] private GameObject cardPrefab;
-    [SerializeField] private Card[] hand = new Card[maxHandSize];
 
-    public int GetMaxHandSize()
-    {
-        return maxHandSize;
-    }
-    public int GetHandSize()
-    {
-        return currentHandSize;
-    }
-      
-    public Card GetCardByIndex(int index)
-    {
-        return hand[index];
-    }
+    [Header("References")]
+    [SerializeField] Hand playerHand;
+    [SerializeField] Hand enemyHand;
 
-    public GameObject GetCardObjectByIndex(int index)
-    {
-        return cardObjects[index];
-    }
-
-    public void AddCardToHand(Card addedCard)
-    {
-        for (int i = 0; i < maxHandSize; i++)
-        {
-            if (positionsOccupied[i] == false)
-            {
-                positionsOccupied[i] = true;
-                cardObjects[i] = Instantiate(cardPrefab, positions[i].position, Quaternion.identity);
-                cardObjects[i].GetComponent<CardContainer>().SetCardInfo(addedCard);
-                cardObjects[i].GetComponent<Transform>().SetParent(positions[i].GetComponent<Transform>());
-                cardObjects[i].GetComponent<CardContainer>().SetHandIndex(i);
-                currentHandSize++;
-
-                hand[i] = addedCard;
-
-                return;
-            }
-        }
-    }
-
-
-    public void RemoveCardFromHand(int index)
-    {
-        Destroy(cardObjects[index]);
-        positionsOccupied[index] = false;
-        hand[index] = null;
-        currentHandSize--;
-    }
-    public void ListHand()
-    {
-        string s = "";
-        for (int i = 0; i < maxHandSize; i++)
-        {
-            s += positionsOccupied[i];
-        }
-        Debug.Log(s);
-    }
     private void Awake()
     {
         /// Singleton mechanism
@@ -88,15 +29,87 @@ public class HandManager : MonoBehaviour
         }
     }
 
-    private void Start()
+    public int GetMaxHandSize()
     {
-        currentHandSize = 0;
-        cardObjects = new GameObject[maxHandSize];
-        positionsOccupied = new bool[maxHandSize];
-        for (int i = 0; i < maxHandSize; i++) 
+        if (GameManager.gameManager.GetPlayerTurn())
         {
-            positionsOccupied[i] = false;
+            return playerHand.GetMaxHandSize();
+        }
+        else
+        {
+            return enemyHand.GetMaxHandSize();
         }
     }
 
+    public int GetHandSize()
+    {
+        if (GameManager.gameManager.GetPlayerTurn())
+        {
+            return playerHand.GetHandSize();
+        }
+        else
+        {
+            return enemyHand.GetHandSize();
+        }
+    }
+
+    public Card GetCardByIndex(int index)
+    {
+        if (GameManager.gameManager.GetPlayerTurn())
+        {
+            return playerHand.GetCardByIndex(index);
+        }
+        else
+        {
+            return enemyHand.GetCardByIndex(index);
+        }
+    }
+
+    public GameObject GetCardObjectByIndex(int index)
+    {
+        if (GameManager.gameManager.GetPlayerTurn())
+        {
+            return playerHand.GetCardObjectByIndex(index);
+        }
+        else
+        {
+            return enemyHand.GetCardObjectByIndex(index);
+        }
+    }
+
+    public void ListHand()
+    {
+        if (GameManager.gameManager.GetPlayerTurn())
+        {
+            playerHand.ListHand();
+        }
+        else
+        {
+            enemyHand.ListHand();
+        }
+    }
+
+    public void AddCardToHand(Card addedCard)
+    {
+        if (GameManager.gameManager.GetPlayerTurn())
+        {
+            playerHand.AddCardToHand(addedCard);
+        }
+        else
+        {
+            enemyHand.AddCardToHand(addedCard);
+        }
+    }
+
+    public void RemoveCardFromHand(int index)
+    {
+        if (GameManager.gameManager.GetPlayerTurn())
+        {
+            playerHand.RemoveCardFromHand(index);
+        }
+        else
+        {
+            enemyHand.RemoveCardFromHand(index);
+        }
+    }
 }
