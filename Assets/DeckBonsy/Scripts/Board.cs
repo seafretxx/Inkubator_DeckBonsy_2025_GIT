@@ -1,5 +1,6 @@
 ﻿
 using UnityEngine;
+using System.Collections.Generic;
 
 public class Board : MonoBehaviour
 {
@@ -20,17 +21,32 @@ public class Board : MonoBehaviour
 
         for (int i = 0; i < size; i++)
         {
+            Dictionary<int, int> valueCounts = new Dictionary<int, int>();
+
             for (int j = 0; j < size; j++)
             {
-                if (placedCards[i, j] != null)
+                Card card = placedCards[i, j];
+                if (card != null)
                 {
-                    score += placedCards[i, j].points;
+                    if (valueCounts.ContainsKey(card.points))
+                        valueCounts[card.points]++;
+                    else
+                        valueCounts[card.points] = 1;
                 }
+            }
+
+            foreach (var pair in valueCounts)
+            {
+                int value = pair.Key;
+                int count = pair.Value;
+                score += value * count * count;
             }
         }
 
         return score;
     }
+
+     
 
     private int CountType(CardType type)
     {
