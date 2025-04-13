@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System;
+using TMPro;
 
 public class HandManager : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class HandManager : MonoBehaviour
     [Header("References")]
     [SerializeField] Hand playerHand;
     [SerializeField] Hand enemyHand;
+    [SerializeField] private GameObject descriptionBox;
+    [SerializeField] private TextMeshProUGUI descriptionText;
 
     private void Awake()
     {
@@ -28,7 +31,16 @@ public class HandManager : MonoBehaviour
             }
         }
     }
+    public void ShowCardDescription(string desc)
+    {
+        descriptionText.text = desc;
+        descriptionBox.SetActive(true);
+    }
 
+    public void HideCardDescription()
+    {
+        descriptionBox.SetActive(false);
+    }
     public int GetMaxHandSize()
     {
         if (GameManager.gameManager.GetPlayerTurn())

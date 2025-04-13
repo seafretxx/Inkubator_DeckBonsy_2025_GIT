@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using UnityEngine;
 using TMPro;
+using UnityEngine.EventSystems;
 
-public class CardContainer : MonoBehaviour
+public class CardContainer : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     private Card cardInfo;
     [SerializeField] private bool isPlayerCard;
@@ -39,5 +40,27 @@ public class CardContainer : MonoBehaviour
     {
         handPower.text = "" + cardInfo.points;
         handName.text = "" + cardInfo.cardName;
+    }
+    void OnMouseOver()
+    {
+        if (cardInfo != null && isPlayerCard) // tylko gracz widzi opisy
+            HandManager.handManager.ShowCardDescription(cardInfo.cardDescription);
+    }
+
+    void OnMouseExit()
+    {
+        if (isPlayerCard)
+            HandManager.handManager.HideCardDescription();
+    }
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (cardInfo != null && isPlayerCard)
+            HandManager.handManager.ShowCardDescription(cardInfo.cardDescription);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        if (isPlayerCard)
+            HandManager.handManager.HideCardDescription();
     }
 }

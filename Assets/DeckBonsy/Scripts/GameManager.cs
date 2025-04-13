@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Board enemyBoard;
     [SerializeField] private TextMeshProUGUI playerScoreCounter;
     [SerializeField] private TextMeshProUGUI enemyScoreCounter;
+   
 
     private void Awake()
     {
@@ -156,4 +157,5 @@ public class GameManager : MonoBehaviour
         playerScoreCounter.text = ("Your score:\n" + playerBoard.CountScore());
         enemyScoreCounter.text = ("Enemy score:\n" + enemyBoard.CountScore());
     }
+    
 }
