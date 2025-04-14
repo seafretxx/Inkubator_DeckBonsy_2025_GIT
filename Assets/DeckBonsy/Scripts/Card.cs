@@ -29,6 +29,7 @@ public class Card
         points = _cardValue._points;
         cardType = _cardValue._cardType;
     }
+
     public void CopyFrom(Card other)
     {
         id = other.id;
