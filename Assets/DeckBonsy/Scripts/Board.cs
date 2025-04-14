@@ -1,4 +1,5 @@
 ﻿
+
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -46,7 +47,7 @@ public class Board : MonoBehaviour
         return score;
     }
 
-     
+
 
     private int CountType(CardType type)
     {
@@ -72,15 +73,14 @@ public class Board : MonoBehaviour
             if (occupiedBoardSpots[columnIndex, i] == false)
             {
                 occupiedBoardSpots[columnIndex, i] = true;
-                placedCardsObjects[columnIndex, i] = Instantiate(addedCard, boardSpots[columnIndex, i].transform.position, 
+                placedCardsObjects[columnIndex, i] = Instantiate(addedCard, boardSpots[columnIndex, i].transform.position,
                     Quaternion.identity, boardSpots[columnIndex, i]);
 
-                CardContainer addedCardContainer = placedCardsObjects[columnIndex,i].GetComponent<CardContainer>();
+                CardContainer addedCardContainer = placedCardsObjects[columnIndex, i].GetComponent<CardContainer>();
                 addedCardContainer.SetCardInfo(addedCard.GetComponent<CardContainer>().GetCardInfo());
                 addedCardContainer.UpdateCard();
                 placedCards[columnIndex, i] = addedCardContainer.GetCardInfo();
-                EffectManager.effectManager.TriggerCardEffect(addedCardContainer.GetCardInfo().effectId);
-                GameManager.gameManager.RemoveCardsWithEqualPoints(columnIndex, addedCardContainer.GetCardInfo().effectId);
+                GameManager.gameManager.PlayedCardTrigger(columnIndex, addedCardContainer.GetCardInfo().points);
                 return;
             }
         }
@@ -102,7 +102,7 @@ public class Board : MonoBehaviour
 
     public void UpdateColumn(int columnIndex)
     {
-        for (int i = size-1; i > 0; i--)
+        for (int i = size - 1; i > 0; i--)
         {
             if (occupiedBoardSpots[columnIndex, i] == true && occupiedBoardSpots[columnIndex, i - 1] == false
                 && occupiedBoardSpots[columnIndex, i - 2] == false)
