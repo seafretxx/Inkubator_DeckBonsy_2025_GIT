@@ -1,4 +1,5 @@
 ﻿
+
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -46,7 +47,7 @@ public class Board : MonoBehaviour
         return score;
     }
 
-     
+
 
     private int CountType(CardType type)
     {
@@ -74,18 +75,13 @@ public class Board : MonoBehaviour
             {
                 occupiedBoardSpots[columnIndex, i] = true;
 <<<<<<< HEAD
-<<<<<<< HEAD
                 placedCardsObjects[columnIndex, i] = Instantiate(addedCard, boardSpots[columnIndex, i].transform.position,
-=======
-                placedCardsObjects[columnIndex, i] = Instantiate(addedCard, boardSpots[columnIndex, i].transform.position, 
->>>>>>> parent of 6573273 (Merge branch 'main' into Boru)
                     Quaternion.identity, boardSpots[columnIndex, i]);
 
-                CardContainer addedCardContainer = placedCardsObjects[columnIndex,i].GetComponent<CardContainer>();
+                CardContainer addedCardContainer = placedCardsObjects[columnIndex, i].GetComponent<CardContainer>();
                 addedCardContainer.SetCardInfo(addedCard.GetComponent<CardContainer>().GetCardInfo());
                 addedCardContainer.UpdateCard();
                 placedCards[columnIndex, i] = addedCardContainer.GetCardInfo();
-<<<<<<< HEAD
 =======
                 placedCards[columnIndex, i] = addedCardContainer.GetCardInfo();
                 placedCardsObjects[columnIndex, i] = Instantiate(addedCard, boardSpots[columnIndex, i].transform.position, Quaternion.identity,
@@ -93,10 +89,6 @@ public class Board : MonoBehaviour
                 addedCardContainer.UpdateCard();
 >>>>>>> parent of 15abde0 (1.1)
                 GameManager.gameManager.PlayedCardTrigger(columnIndex, addedCardContainer.GetCardInfo().points);
-=======
-                EffectManager.effectManager.TriggerCardEffect(addedCardContainer.GetCardInfo().effectId);
-                GameManager.gameManager.RemoveCardsWithEqualPoints(columnIndex, addedCardContainer.GetCardInfo().effectId);
->>>>>>> parent of 6573273 (Merge branch 'main' into Boru)
                 return;
             }
         }
@@ -119,14 +111,10 @@ public class Board : MonoBehaviour
     public void UpdateColumn(int columnIndex)
     {
 <<<<<<< HEAD
-<<<<<<< HEAD
         for (int i = size - 1; i > 0; i--)
 =======
         for (int i = 1; i < size; i++)
 >>>>>>> parent of 15abde0 (1.1)
-=======
-        for (int i = size-1; i > 0; i--)
->>>>>>> parent of 6573273 (Merge branch 'main' into Boru)
         {
             if (occupiedBoardSpots[columnIndex, i] == true && occupiedBoardSpots[columnIndex, i - 1] == false)
             {
