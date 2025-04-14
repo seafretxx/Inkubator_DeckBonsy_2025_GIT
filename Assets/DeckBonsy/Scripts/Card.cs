@@ -43,5 +43,5 @@ public class Card
     {
         points = _points;
     }
-
+    
 }
