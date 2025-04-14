@@ -41,7 +41,6 @@ public class HandManager : MonoBehaviour
     {
         descriptionBox.SetActive(false);
     }
-
     public int GetMaxHandSize()
     {
         if (GameManager.gameManager.GetPlayerTurn())
