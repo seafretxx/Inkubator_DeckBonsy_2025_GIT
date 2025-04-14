@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 
 public class CardContainer : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    private Card cardInfo;
+    [SerializeField] private Card cardInfo;
     [SerializeField] private bool isPlayerCard;
     [SerializeField] private int handIndex;
     [SerializeField] private TextMeshProUGUI handPower;
@@ -41,19 +41,10 @@ public class CardContainer : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         handPower.text = "" + cardInfo.points;
         handName.text = "" + cardInfo.cardName;
     }
-    void OnMouseOver()
-    {
-        if (cardInfo != null && isPlayerCard) // tylko gracz widzi opisy
-            HandManager.handManager.ShowCardDescription(cardInfo.cardDescription);
-    }
 
-    void OnMouseExit()
-    {
-        if (isPlayerCard)
-            HandManager.handManager.HideCardDescription();
-    }
     public void OnPointerEnter(PointerEventData eventData)
     {
+        Debug.Log("ONMOUSEOVER!" + cardInfo + isPlayerCard);
         if (cardInfo != null && isPlayerCard)
             HandManager.handManager.ShowCardDescription(cardInfo.cardDescription);
     }

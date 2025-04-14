@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿
+using System.Collections;
 using UnityEngine;
 using TMPro;
 
@@ -22,7 +23,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Board enemyBoard;
     [SerializeField] private TextMeshProUGUI playerScoreCounter;
     [SerializeField] private TextMeshProUGUI enemyScoreCounter;
-   
+
 
     private void Awake()
     {
@@ -109,15 +110,15 @@ public class GameManager : MonoBehaviour
     {
         if (isPlayerTurn)
         {
-            Debug.Log("Player 1's turn has ended.");
+            //Debug.Log("Player 1's turn has ended.");
             isPlayerTurn = false;
-            Debug.Log("Now it's Player 2's turn.");
+            //Debug.Log("Now it's Player 2's turn.");
         }
         else
         {
-            Debug.Log("Player 2's turn has ended.");
+            //Debug.Log("Player 2's turn has ended.");
             isPlayerTurn = true;
-            Debug.Log("Now it's Player 1's turn.");
+            //Debug.Log("Now it's Player 1's turn.");
         }
     }
 
@@ -157,5 +158,5 @@ public class GameManager : MonoBehaviour
         playerScoreCounter.text = ("Your score:\n" + playerBoard.CountScore());
         enemyScoreCounter.text = ("Enemy score:\n" + enemyBoard.CountScore());
     }
-    
+
 }

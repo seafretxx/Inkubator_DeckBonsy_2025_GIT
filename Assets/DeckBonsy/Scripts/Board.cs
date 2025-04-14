@@ -1,4 +1,5 @@
 ﻿
+
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -46,7 +47,7 @@ public class Board : MonoBehaviour
         return score;
     }
 
-     
+
 
     private int CountType(CardType type)
     {
@@ -67,17 +68,19 @@ public class Board : MonoBehaviour
 
     public void AddCardToColumn(GameObject addedCard, int columnIndex)
     {
-        CardContainer addedCardContainer = addedCard.GetComponent<CardContainer>();
         for (int i = 0; i < size; i++)
         {
             if (occupiedBoardSpots[columnIndex, i] == false)
             {
                 occupiedBoardSpots[columnIndex, i] = true;
-                placedCards[columnIndex, i] = addedCardContainer.GetCardInfo();
-                placedCardsObjects[columnIndex, i] = Instantiate(addedCard, boardSpots[columnIndex, i].transform.position, Quaternion.identity,
-                    boardSpots[columnIndex, i]);
+                placedCardsObjects[columnIndex, i] = Instantiate(addedCard, boardSpots[columnIndex, i].transform.position,
+                    Quaternion.identity, boardSpots[columnIndex, i]);
+
+                CardContainer addedCardContainer = placedCardsObjects[columnIndex, i].GetComponent<CardContainer>();
+                addedCardContainer.SetCardInfo(addedCard.GetComponent<CardContainer>().GetCardInfo());
                 addedCardContainer.UpdateCard();
-                GameManager.gameManager.PlayedCardTrigger(columnIndex, addedCardContainer.GetCardInfo().points);
+                placedCards[columnIndex, i] = addedCardContainer.GetCardInfo();
+                GameManager.gameManager.PlayedCardTrigger(columnIndex, addedCardContainer.GetCardInfo().effectId);
                 return;
             }
         }
@@ -99,20 +102,18 @@ public class Board : MonoBehaviour
 
     public void UpdateColumn(int columnIndex)
     {
-        for (int i = 1; i < size; i++)
+        for (int i = size - 1; i > 0; i--)
         {
-            if (occupiedBoardSpots[columnIndex, i] == true && occupiedBoardSpots[columnIndex, i - 1] == false)
+            if (occupiedBoardSpots[columnIndex, i] == true && occupiedBoardSpots[columnIndex, i - 1] == false
+                && occupiedBoardSpots[columnIndex, i - 2] == false)
             {
-                occupiedBoardSpots[columnIndex, i - 1] = true;
+                occupiedBoardSpots[columnIndex, i - 2] = true;
                 occupiedBoardSpots[columnIndex, i] = false;
-                placedCardsObjects[columnIndex, i].transform.position = boardSpots[columnIndex, i - 1].position;
-                placedCards[columnIndex, i - 1] = placedCards[columnIndex, i];
+                placedCardsObjects[columnIndex, i].transform.position = boardSpots[columnIndex, i - 2].position;
+                placedCards[columnIndex, i - 2] = placedCards[columnIndex, i];
                 placedCards[columnIndex, i] = null;
             }
-        }
-        for (int i = 1; i < size; i++)
-        {
-            if (occupiedBoardSpots[columnIndex, i] == true && occupiedBoardSpots[columnIndex, i - 1] == false)
+            else if (occupiedBoardSpots[columnIndex, i] == true && occupiedBoardSpots[columnIndex, i - 1] == false)
             {
                 occupiedBoardSpots[columnIndex, i - 1] = true;
                 occupiedBoardSpots[columnIndex, i] = false;
