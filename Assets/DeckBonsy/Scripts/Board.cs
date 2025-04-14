@@ -79,7 +79,8 @@ public class Board : MonoBehaviour
                 addedCardContainer.SetCardInfo(addedCard.GetComponent<CardContainer>().GetCardInfo());
                 addedCardContainer.UpdateCard();
                 placedCards[columnIndex, i] = addedCardContainer.GetCardInfo();
-                GameManager.gameManager.PlayedCardTrigger(columnIndex, addedCardContainer.GetCardInfo().effectId);
+                EffectManager.effectManager.TriggerCardEffect(addedCardContainer.GetCardInfo().effectId);
+                GameManager.gameManager.RemoveCardsWithEqualPoints(columnIndex, addedCardContainer.GetCardInfo().effectId);
                 return;
             }
         }

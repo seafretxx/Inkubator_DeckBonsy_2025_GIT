@@ -56,12 +56,12 @@ public class GameManager : MonoBehaviour
             {
                 if (playerBoard.CheckForEmptyInColumn(chosenColumnIndex))
                 {
-                    Debug.Log(chosenCardIndex + " " + chosenColumnIndex);
+                    //Debug.Log(chosenCardIndex + " " + chosenColumnIndex);
                     chosenCard = chosenColumn = false;
                     playerBoard.AddCardToColumn(HandManager.handManager.GetCardObjectByIndex(chosenCardIndex), chosenColumnIndex);
                     HandManager.handManager.RemoveCardFromHand(chosenCardIndex);
-                    playerBoard.ListBoard();
-                    HandManager.handManager.ListHand();
+                    //playerBoard.ListBoard();
+                    //HandManager.handManager.ListHand();
                     UpdateScore();
                     EndTurn();
                 }
@@ -75,12 +75,12 @@ public class GameManager : MonoBehaviour
             {
                 if (enemyBoard.CheckForEmptyInColumn(chosenColumnIndex))
                 {
-                    Debug.Log(chosenCardIndex + " " + chosenColumnIndex);
+                    //Debug.Log(chosenCardIndex + " " + chosenColumnIndex);
                     chosenCard = chosenColumn = false;
                     enemyBoard.AddCardToColumn(HandManager.handManager.GetCardObjectByIndex(chosenCardIndex), chosenColumnIndex);
                     HandManager.handManager.RemoveCardFromHand(chosenCardIndex);
-                    enemyBoard.ListBoard();
-                    HandManager.handManager.ListHand();
+                    //enemyBoard.ListBoard();
+                    //.handManager.ListHand();
                     UpdateScore();
                     EndTurn();
                 }
@@ -93,7 +93,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void PlayedCardTrigger(int columnIndex, int cardPoints)
+    public void RemoveCardsWithEqualPoints(int columnIndex, int cardPoints)
     {
         if (isPlayerTurn)
         {
