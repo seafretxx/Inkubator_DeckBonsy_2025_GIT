@@ -10,6 +10,7 @@ public class Card
     public int points { get; private set; }
     public CardType cardType { get; private set; }
 
+
     public void SetValues(int _id, string _cardName, string _cardDescription, int _effectId, int _points, CardType _cardType)
     {
         id = _id;
@@ -29,6 +30,7 @@ public class Card
         points = _cardValue._points;
         cardType = _cardValue._cardType;
     }
+
     public void CopyFrom(Card other)
     {
         id = other.id;
