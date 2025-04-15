@@ -5,11 +5,22 @@ using UnityEngine.EventSystems;
 
 public class CardContainer : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    private Card cardInfo;
+    [SerializeField] private Card cardInfo;
     [SerializeField] private bool isPlayerCard;
     [SerializeField] private int handIndex;
     [SerializeField] private TextMeshProUGUI handPower;
     [SerializeField] private TextMeshProUGUI handName;
+    [SerializeField] private bool inPlay;
+
+    public bool GetInPlay()
+    {
+        return inPlay;
+    }
+
+    public void SetInPlay(bool _inPlay)
+    {
+        inPlay = _inPlay;
+    }
 
     public Card GetCardInfo()
     {
@@ -33,7 +44,8 @@ public class CardContainer : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     public void WhenClicked()
     {
-        GameManager.gameManager.SetChosenCardIndex(handIndex, isPlayerCard);
+        if (!inPlay)
+            GameManager.gameManager.SetChosenCardIndex(handIndex, isPlayerCard);
     }
 
     public void UpdateCard()
@@ -41,23 +53,10 @@ public class CardContainer : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         handPower.text = "" + cardInfo.points;
         handName.text = "" + cardInfo.cardName;
     }
-    void OnMouseOver()
-    {
-        if (cardInfo != null && isPlayerCard) // tylko gracz widzi opisy
-            HandManager.handManager.ShowCardDescription(cardInfo.cardDescription);
-    }
 
-    void OnMouseExit()
-    {
-        if (isPlayerCard)
-            HandManager.handManager.HideCardDescription();
-    }
     public void OnPointerEnter(PointerEventData eventData)
     {
-<<<<<<< HEAD
         //Debug.Log("ONMOUSEOVER!" + cardInfo + isPlayerCard);
-=======
->>>>>>> parent of 15abde0 (1.1)
         if (cardInfo != null && isPlayerCard)
             HandManager.handManager.ShowCardDescription(cardInfo.cardDescription);
     }
