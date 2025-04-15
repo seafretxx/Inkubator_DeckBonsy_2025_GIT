@@ -22,7 +22,15 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Board enemyBoard;
     [SerializeField] private TextMeshProUGUI playerScoreCounter;
     [SerializeField] private TextMeshProUGUI enemyScoreCounter;
-   
+
+    [Header("End Game UI")]
+    [SerializeField] private GameObject endGamePanel;
+    [SerializeField] private TextMeshProUGUI resultText;
+    [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private UnityEngine.UI.Button restartButton;
+
+
+
 
     private void Awake()
     {
@@ -46,10 +54,16 @@ public class GameManager : MonoBehaviour
         isPlayerTurn = true;
         gameReady = true;
         UpdateScore();
+        endGamePanel.SetActive(false);
+        restartButton.onClick.AddListener(RestartGame);
+
     }
 
     private void Update()
     {
+        if (!gameReady)
+            return;
+
         if (chosenCard && chosenColumn) // PLAYING A CARD
         {
             if (isPlayerTurn)
@@ -63,6 +77,7 @@ public class GameManager : MonoBehaviour
                     //playerBoard.ListBoard();
                     //HandManager.handManager.ListHand();
                     UpdateScore();
+                    CheckForRoundEnd();
                     EndTurn();
                 }
                 else
@@ -82,6 +97,7 @@ public class GameManager : MonoBehaviour
                     //enemyBoard.ListBoard();
                     //.handManager.ListHand();
                     UpdateScore();
+                    CheckForRoundEnd();
                     EndTurn();
                 }
                 else
@@ -157,5 +173,54 @@ public class GameManager : MonoBehaviour
         playerScoreCounter.text = ("Your score:\n" + playerBoard.CountScore());
         enemyScoreCounter.text = ("Enemy score:\n" + enemyBoard.CountScore());
     }
-    
+    private void CheckForRoundEnd()
+    {
+        bool isPlayerFull = playerBoard.IsBoardFull();
+        bool isEnemyFull = enemyBoard.IsBoardFull();
+
+        int playerScore = playerBoard.CountScore();
+        int enemyScore = enemyBoard.CountScore();
+
+        if (isPlayerFull || isEnemyFull || playerScore >= 10 || enemyScore >= 10)
+        {
+            string result;
+
+            if (playerScore > enemyScore)
+                result = "PLAYER WINS!";
+            else if (enemyScore > playerScore)
+                result = "ENEMY WINS!";
+            else
+                result = "DRAW!";
+
+            Debug.Log("ROUND OVER!");
+            Debug.Log("Player: " + playerScore + "  Enemy: " + enemyScore);
+            Debug.Log(result);
+
+            gameReady = false;
+
+
+            endGamePanel.SetActive(true);
+            scoreText.text = "PLAYER: " + playerScore + "    ENEMY: " + enemyScore;
+            resultText.text = result.ToUpper();
+
+        }
+    }
+
+     private void RestartGame()
+        {
+            endGamePanel.SetActive(false);
+            gameReady = true;
+            isPlayerTurn = true;
+            chosenCard = false;
+            chosenColumn = false;
+
+            DeckManager.deckManager.ResetDeck();
+            HandManager.handManager.ClearHand();
+            playerBoard.ClearBoard();
+            enemyBoard.ClearBoard();
+
+            UpdateScore();
+        }
+
+
 }

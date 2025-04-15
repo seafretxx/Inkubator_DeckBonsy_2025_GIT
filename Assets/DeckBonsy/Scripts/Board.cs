@@ -190,5 +190,34 @@ public class Board : MonoBehaviour
             }
         }
     }
+    public bool IsBoardFull()
+    {
+        for (int i = 0; i < size; i++)
+        {
+            for (int j = 0; j < size; j++)
+            {
+                if (!occupiedBoardSpots[i, j])
+                    return false;
+            }
+        }
+        return true;
+    }
+    public void ClearBoard()
+    {
+        for (int i = 0; i < size; i++)
+        {
+            for (int j = 0; j < size; j++)
+            {
+                if (occupiedBoardSpots[i, j])
+                {
+                    Destroy(placedCardsObjects[i, j]);
+                    placedCards[i, j] = null;
+                    placedCardsObjects[i, j] = null;
+                    occupiedBoardSpots[i, j] = false;
+                }
+            }
+        }
+    }
+
 
 }

@@ -124,4 +124,16 @@ public class HandManager : MonoBehaviour
             enemyHand.RemoveCardFromHand(index);
         }
     }
+    public void ClearHand()
+    {
+        if (GameManager.gameManager.GetPlayerTurn())
+        {
+            playerHand.ClearHand();
+        }
+        else
+        {
+            enemyHand.ClearHand();
+        }
+    }
+
 }
