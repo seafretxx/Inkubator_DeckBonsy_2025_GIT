@@ -8,6 +8,7 @@ public class CardContainer : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     [SerializeField] private Card cardInfo;
     [SerializeField] private bool isPlayerCard;
     [SerializeField] private int handIndex;
+    [SerializeField] private int columnIndex;
     [SerializeField] private TextMeshProUGUI handPower;
     [SerializeField] private TextMeshProUGUI handName;
     [SerializeField] private bool inPlay;
@@ -32,6 +33,11 @@ public class CardContainer : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         cardInfo = _cardInfo;
     }
 
+    public bool GetIsPlayerCard()
+    {
+        return isPlayerCard;
+    }
+
     public void SetIsPlayerCard(bool _isPlayerCard)
     {
         isPlayerCard = _isPlayerCard;
@@ -42,13 +48,32 @@ public class CardContainer : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         handIndex = _handIndex;
     }
 
+    public void SetColumnIndex(int _columnIndex)
+    {
+        columnIndex = _columnIndex;
+    }
+
+    public int GetColumnIndex()
+    {
+        return columnIndex;
+    }
+
     public void WhenClicked()
     {
         if (!inPlay)
             GameManager.gameManager.SetChosenCardIndex(handIndex, isPlayerCard);
+        else
+            GameManager.gameManager.SetChosenCardInPlayObject(this);
     }
 
     public void UpdateCard()
+    {
+        cardInfo.SetPoints(cardInfo.basePoints);
+        EffectManager.effectManager.TriggerCardEffect(cardInfo.effectId, this, null);
+        UpdateCardVisuals();
+    }
+
+    public void UpdateCardVisuals()
     {
         handPower.text = "" + cardInfo.points;
         handName.text = "" + cardInfo.cardName;
