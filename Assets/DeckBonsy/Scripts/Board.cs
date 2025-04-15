@@ -46,9 +46,7 @@ public class Board : MonoBehaviour
         return score;
     }
 
-
-
-    private int CountType(CardType type)
+    public int CountTypeOnBoard(CardType type)
     {
         int count = 0;
 
@@ -56,10 +54,24 @@ public class Board : MonoBehaviour
         {
             for (int j = 0; j < size; j++)
             {
-                if (placedCards[i, j].cardType == type)
+                if (placedCards[i, j] != null && placedCards[i, j].cardType == type)
                 {
                     count++;
                 }
+            }
+        }
+        return count;
+    }
+
+    public int CountTypeInColumn(CardType type, int columnIndex)
+    {
+        int count = 0;
+
+        for (int i = 0; i < size; i++)
+        {
+            if (placedCards[columnIndex, i] != null && placedCards[columnIndex, i].cardType == type)
+            {
+                count++;
             }
         }
         return count;
@@ -78,14 +90,28 @@ public class Board : MonoBehaviour
                 CardContainer addedCardContainer = placedCardsObjects[columnIndex, i].GetComponent<CardContainer>();
                 addedCardContainer.SetInPlay(true);
                 addedCardContainer.SetCardInfo(addedCard.GetComponent<CardContainer>().GetCardInfo());
-                addedCardContainer.UpdateCard();
+                addedCardContainer.SetColumnIndex(columnIndex);
                 placedCards[columnIndex, i] = addedCardContainer.GetCardInfo();
-                EffectManager.effectManager.TriggerCardEffect(addedCardContainer.GetCardInfo().effectId);
-                GameManager.gameManager.RemoveCardsWithEqualPoints(columnIndex, addedCardContainer.GetCardInfo().points);
+                UpdateBoard();
                 return;
             }
         }
         Debug.Log("Column full!");
+    }
+
+    public bool IsBoardEmpty()
+    {
+        for (int i = 0; i < size; i++)
+        {
+            for (int j = 0; j < size; j++)
+            {
+                if (occupiedBoardSpots[i, j] == true)
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     public bool CheckForEmptyInColumn(int columnIndex)
@@ -101,28 +127,50 @@ public class Board : MonoBehaviour
         return false;
     }
 
-    public void UpdateColumn(int columnIndex)
+    public void DropFloatingCards(int columnIndex)
     {
-        for (int i = size - 1; i > 0; i--)
+        int checkedIndex = 2;
+        if (occupiedBoardSpots[columnIndex, checkedIndex] == true && occupiedBoardSpots[columnIndex, 2 - checkedIndex] == false
+            && occupiedBoardSpots[columnIndex, 2 - checkedIndex] == false)
         {
-            if (occupiedBoardSpots[columnIndex, i] == true && occupiedBoardSpots[columnIndex, i - 1] == false
-                && occupiedBoardSpots[columnIndex, i - 2] == false)
+            occupiedBoardSpots[columnIndex, checkedIndex - 2] = true;
+            occupiedBoardSpots[columnIndex, checkedIndex] = false;
+            placedCardsObjects[columnIndex, checkedIndex].transform.position = boardSpots[columnIndex, checkedIndex - 2].position;
+            placedCards[columnIndex, checkedIndex - 2] = placedCards[columnIndex, checkedIndex];
+            placedCards[columnIndex, checkedIndex] = null;
+        }
+        else if (occupiedBoardSpots[columnIndex, checkedIndex] == true && occupiedBoardSpots[columnIndex, checkedIndex - 1] == false)
+        {
+            occupiedBoardSpots[columnIndex, checkedIndex - 1] = true;
+            occupiedBoardSpots[columnIndex, checkedIndex] = false;
+            placedCardsObjects[columnIndex, checkedIndex].transform.position = boardSpots[columnIndex, checkedIndex - 1].position;
+            placedCards[columnIndex, checkedIndex - 1] = placedCards[columnIndex, checkedIndex];
+            placedCards[columnIndex, checkedIndex] = null;
+        }
+        checkedIndex = 1;
+        if (occupiedBoardSpots[columnIndex, checkedIndex] == true && occupiedBoardSpots[columnIndex, checkedIndex - 1] == false)
+        {
+            occupiedBoardSpots[columnIndex, checkedIndex - 1] = true;
+            occupiedBoardSpots[columnIndex, checkedIndex] = false;
+            placedCardsObjects[columnIndex, checkedIndex].transform.position = boardSpots[columnIndex, checkedIndex - 1].position;
+            placedCards[columnIndex, checkedIndex - 1] = placedCards[columnIndex, checkedIndex];
+            placedCards[columnIndex, checkedIndex] = null;
+        }
+    }
+
+    public void UpdateBoard()
+    {
+        for (int i = 0; i < size; i++)
+        {
+            for (int j = 0; j < size; j++)
             {
-                occupiedBoardSpots[columnIndex, i - 2] = true;
-                occupiedBoardSpots[columnIndex, i] = false;
-                placedCardsObjects[columnIndex, i].transform.position = boardSpots[columnIndex, i - 2].position;
-                placedCards[columnIndex, i - 2] = placedCards[columnIndex, i];
-                placedCards[columnIndex, i] = null;
-            }
-            else if (occupiedBoardSpots[columnIndex, i] == true && occupiedBoardSpots[columnIndex, i - 1] == false)
-            {
-                occupiedBoardSpots[columnIndex, i - 1] = true;
-                occupiedBoardSpots[columnIndex, i] = false;
-                placedCardsObjects[columnIndex, i].transform.position = boardSpots[columnIndex, i - 1].position;
-                placedCards[columnIndex, i - 1] = placedCards[columnIndex, i];
-                placedCards[columnIndex, i] = null;
+                if (occupiedBoardSpots[i, j] == true && placedCardsObjects[i, j] != null)
+                {
+                    placedCardsObjects[i, j].GetComponent<CardContainer>().UpdateCard();
+                }
             }
         }
+        Debug.Log("Board updated!");
     }
 
     public void RemoveCardsFromColumn(int columnIndex, int pointValue)
@@ -134,7 +182,8 @@ public class Board : MonoBehaviour
                 RemoveCardFromColumn(columnIndex, i);
             }
         }
-        UpdateColumn(columnIndex);
+        DropFloatingCards(columnIndex);
+        UpdateBoard();
     }
 
     private void RemoveCardFromColumn(int columnIndex, int rowIndex)
@@ -146,6 +195,7 @@ public class Board : MonoBehaviour
             placedCards[columnIndex, rowIndex] = null;
             placedCardsObjects[columnIndex, rowIndex].GetComponent<CardContainer>().SetInPlay(false);
             Destroy(placedCardsObjects[columnIndex, rowIndex]);
+            UpdateBoard();
         }
         else
         {
