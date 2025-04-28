@@ -29,6 +29,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI playerScoreCounter;
     [SerializeField] private TextMeshProUGUI enemyScoreCounter;
 
+    [Header("Background Sprites")]
+    [SerializeField] private UnityEngine.UI.Image backgroundImage;
+    [SerializeField] private Sprite playerBackground;
+    [SerializeField] private Sprite enemyBackground;
+
     [Header("End Game UI")]
     [SerializeField] private GameObject endGamePanel;
     [SerializeField] private TextMeshProUGUI resultText;
@@ -212,8 +217,19 @@ public class GameManager : MonoBehaviour
             isPlayerTurn = true;
             Debug.Log("Now it's Player 1's turn.");
         }
+        UpdateBackground();
     }
-
+    private void UpdateBackground()
+    {
+        if (isPlayerTurn)
+        {
+            backgroundImage.sprite = playerBackground;
+        }
+        else
+        {
+            backgroundImage.sprite = enemyBackground;
+        }
+    }
     public bool GetPlayerTurn()
     {
         return isPlayerTurn;

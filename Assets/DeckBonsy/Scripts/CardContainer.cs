@@ -77,7 +77,7 @@ public class CardContainer : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public void UpdateCardVisuals()
     {
         handPower.text = "" + cardInfo.points;
-        handName.text = "" + cardInfo.cardName;
+      // handName.text = "" + cardInfo.cardName;
         GetComponent<Image>().sprite = cardInfo.sprite;
     }
 
