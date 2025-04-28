@@ -2,6 +2,7 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class CardContainer : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
@@ -77,6 +78,7 @@ public class CardContainer : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     {
         handPower.text = "" + cardInfo.points;
         handName.text = "" + cardInfo.cardName;
+        GetComponent<Image>().sprite = cardInfo.sprite;
     }
 
     public void OnPointerEnter(PointerEventData eventData)
