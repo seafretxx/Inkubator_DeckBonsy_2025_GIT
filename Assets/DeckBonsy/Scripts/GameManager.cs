@@ -1,11 +1,10 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager gameManager { get; private set; }
-
 
     [Header("Main Variables")]
     [SerializeField] public bool isPlayerTurn { get; private set; }
@@ -14,7 +13,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private CardContainer cardContainerBeingPlayed;
     [SerializeField] private int scoreToWin;
     [SerializeField] private int currentRound;
-
 
     [Header("Input System")]
     [SerializeField] private bool chosenCard;
@@ -50,20 +48,21 @@ public class GameManager : MonoBehaviour
     [SerializeField] private DialogueManager dialogueManager;
     [SerializeField] private GameObject dialoguePanel;
 
+    [Header("Journal")]
+    [SerializeField] private GameObject journalButton;
+    public JournalManager journalManager;
+
 
 
     private void Awake()
     {
-        /// Singleton mechanism
+        if (gameManager != null && gameManager != this)
         {
-            if (gameManager != null && gameManager != this)
-            {
-                Destroy(this);
-            }
-            else
-            {
-                gameManager = this;
-            }
+            Destroy(this);
+        }
+        else
+        {
+            gameManager = this;
         }
     }
 
@@ -79,13 +78,12 @@ public class GameManager : MonoBehaviour
         endGamePanel.SetActive(false);
         restartButton.onClick.AddListener(RestartGame);
         currentRound = 0;
-        
-
+        journalButton.SetActive(true);
+        journalButton.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(OpenJournal);
     }
-    //if (!gameReady) CheckForRoundEnd();
-    //   return;
+
     private void Update()
-    { 
+    {
         if (gameReady)
         {
             if (!isCardBeingPlayed)
@@ -98,15 +96,11 @@ public class GameManager : MonoBehaviour
                     {
                         if (playerBoard.CheckForEmptyInColumn(chosenColumnIndex))
                         {
-                            //Debug.Log(chosenCardIndex + " " + chosenColumnIndex);
                             chosenCard = chosenColumn = false;
                             playerBoard.AddCardToColumn(HandManager.handManager.GetCardObjectByIndex(chosenCardIndex), chosenColumnIndex);
                             HandManager.handManager.RemoveCardFromHand(chosenCardIndex);
-                            //playerBoard.ListBoard();
-                            //HandManager.handManager.ListHand();
                             UpdateScore();
                             CheckForRoundEnd();
-
                         }
                         else
                         {
@@ -118,15 +112,11 @@ public class GameManager : MonoBehaviour
                     {
                         if (enemyBoard.CheckForEmptyInColumn(chosenColumnIndex))
                         {
-                            //Debug.Log(chosenCardIndex + " " + chosenColumnIndex);
                             chosenCard = chosenColumn = false;
                             enemyBoard.AddCardToColumn(HandManager.handManager.GetCardObjectByIndex(chosenCardIndex), chosenColumnIndex);
                             HandManager.handManager.RemoveCardFromHand(chosenCardIndex);
-                            //enemyBoard.ListBoard();
-                            //.handManager.ListHand();
                             UpdateScore();
                             CheckForRoundEnd();
-
                         }
                         else
                         {
@@ -143,7 +133,6 @@ public class GameManager : MonoBehaviour
 
                 if (DoesEffectIdRequireInput(playedCard.effectId) && !inactiveBoard.IsBoardEmpty())
                 {
-                    Debug.Log("Requires input!");
                     if (chosenCardContainerInPlay)
                     {
                         chosenCardContainerInPlay = false;
@@ -155,7 +144,6 @@ public class GameManager : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("Does not require input!");
                     chosenCardContainerInPlay = false;
                     isCardBeingPlayed = false;
                     RemoveCardsWithEqualPoints(chosenColumnIndex, playedCard.points);
@@ -164,7 +152,6 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
-        
     }
 
     private bool DoesEffectIdRequireInput(int effectId)
@@ -178,8 +165,6 @@ public class GameManager : MonoBehaviour
         return false;
     }
 
-
-
     public void RemoveCardsWithEqualPoints(int columnIndex, int cardPoints)
     {
         if (isPlayerTurn)
@@ -191,6 +176,7 @@ public class GameManager : MonoBehaviour
             playerBoard.RemoveCardsFromColumn(columnIndex, cardPoints);
         }
     }
+
     public int CountTypeOfCardOnBoard(CardType type, bool isPlayerBoard)
     {
         if (isPlayerBoard)
@@ -214,24 +200,22 @@ public class GameManager : MonoBehaviour
             return enemyBoard.CountTypeInColumn(type, columnIndex);
         }
     }
+
     public void EndTurn()
     {
         if (isPlayerTurn)
         {
-            Debug.Log("Player 1's turn has ended.");
             isPlayerTurn = false;
-            Debug.Log("Now it's Player 2's turn.");
             UpdateDrawTexts();
         }
         else
         {
-            Debug.Log("Player 2's turn has ended.");
             isPlayerTurn = true;
-            Debug.Log("Now it's Player 1's turn.");
             UpdateDrawTexts();
         }
         UpdateBackground();
     }
+
     private void UpdateBackground()
     {
         if (isPlayerTurn)
@@ -243,6 +227,7 @@ public class GameManager : MonoBehaviour
             backgroundImage.sprite = enemyBackground;
         }
     }
+
     private void UpdateDrawTexts()
     {
         if (isPlayerTurn)
@@ -256,6 +241,7 @@ public class GameManager : MonoBehaviour
             enemyDrawText.SetActive(true);
         }
     }
+
     public bool GetPlayerTurn()
     {
         return isPlayerTurn;
@@ -273,11 +259,13 @@ public class GameManager : MonoBehaviour
             Debug.Log("Not your turn!");
         }
     }
+
     public void SetChosenCardInPlayObject(CardContainer _chosenCardContainerInPlayObject)
     {
         chosenCardContainerInPlay = true;
         chosenCardContainerInPlayObject = _chosenCardContainerInPlayObject;
     }
+
     public void SetChosenColumnIndex(int _chosenColumnIndex, bool _isPlayerBoard)
     {
         if (isPlayerTurn == _isPlayerBoard)
@@ -297,10 +285,10 @@ public class GameManager : MonoBehaviour
         enemyScoreCounter.text = ("Enemy score:\n" + enemyBoard.CountScore());
         CheckForRoundEnd();
     }
+
     private void CheckForRoundEnd()
     {
-        if (!gameReady)
-            return; 
+        if (!gameReady) return;
 
         bool isPlayerFull = playerBoard.IsBoardFull();
         bool isEnemyFull = enemyBoard.IsBoardFull();
@@ -314,20 +302,12 @@ public class GameManager : MonoBehaviour
 
         string result = "";
 
-        
         if (playerWonByScore && playerScore > enemyScore)
         {
             result = "PLAYER WINS!";
-            
             gameReady = false;
-            if (dialogueManager != null)
-            {
-                StartDialogueScene(dialogueManager.GetDialogueForRound(currentRound));
-            }
-            else
-            {
-                Debug.LogError("Brak przypisanego DialogueManagera!");
-            }
+            StartDialogueScene(dialogueManager.GetDialogueForRound(currentRound));
+            //OpenJournalAfterWin();
         }
         else if (enemyWonByScore && enemyScore > playerScore)
         {
@@ -342,16 +322,8 @@ public class GameManager : MonoBehaviour
             if (playerScore > enemyScore)
             {
                 result = "PLAYER WINS!";
-              
                 gameReady = false;
-                if (dialogueManager != null)
-                {
-                    StartDialogueScene(dialogueManager.GetDialogueForRound(currentRound));
-                }
-                else
-                {
-                    Debug.LogError("Brak przypisanego DialogueManagera!");
-                }
+                StartDialogueScene(dialogueManager.GetDialogueForRound(currentRound));
             }
             else if (enemyScore > playerScore)
             {
@@ -364,34 +336,18 @@ public class GameManager : MonoBehaviour
             else
             {
                 result = "DRAW!";
-                
                 gameReady = false;
-                if (dialogueManager != null)
-                {
-                    StartDialogueScene(dialogueManager.GetDialogueForRound(currentRound));
-                }
-                else
-                {
-                    Debug.LogError("Brak przypisanego DialogueManagera!");
-                }
+                StartDialogueScene(dialogueManager.GetDialogueForRound(currentRound));
             }
-        }
-
-        if (!string.IsNullOrEmpty(result))
-        {
-            Debug.Log("ROUND OVER!");
-            Debug.Log($"Player: {playerScore}  Enemy: {enemyScore}");
-            Debug.Log(result);
         }
     }
 
     public void StartDialogueScene(DialogueData dialogue)
     {
-        gameReady = false; 
-        dialoguePanel.SetActive(true); 
+        gameReady = false;
+        dialoguePanel.SetActive(true);
         dialogueManager.StartDialogue(dialogue);
         currentRound++;
-
 
         dialogueManager.OnDialogueEnd -= ContinueGameAfterDialogue;
         dialogueManager.OnDialogueEnd += ContinueGameAfterDialogue;
@@ -399,46 +355,56 @@ public class GameManager : MonoBehaviour
 
     private void ContinueGameAfterDialogue()
     {
-        dialoguePanel.SetActive(false);  
+        dialoguePanel.SetActive(false);
 
-        
-        gameReady = true;  
-        isPlayerTurn = true;  
-        chosenCard = false;
-        chosenColumn = false;
+        gameReady = true;
+        isPlayerTurn = true;
 
-       
         DeckManager.deckManager.ResetDeck();
         HandManager.handManager.ClearHand();
         playerBoard.ClearBoard();
         enemyBoard.ClearBoard();
 
-        UpdateScore();  
-
-        
-    }
-
-    private void RestartGame()
-    {
-       
-        endGamePanel.SetActive(false);  
-        gameReady = true;  
-        isPlayerTurn = true;  
-        chosenCard = false;
-        chosenColumn = false;
-
-       
-        DeckManager.deckManager.ResetDeck();
-        HandManager.handManager.ClearHand();
-        playerBoard.ClearBoard();
-        enemyBoard.ClearBoard();
-
-      
         UpdateScore();
     }
 
+    //private void OpenJournalAfterWin()
+    //{
+       
+    //    SceneManager.LoadScene(journalSceneName);
+   // }
+
+    private void RestartGame()
+    {
+        endGamePanel.SetActive(false);
+        gameReady = true;
+        isPlayerTurn = true;
+        chosenCard = false;
+        chosenColumn = false;
+
+        DeckManager.deckManager.ResetDeck();
+        HandManager.handManager.ClearHand();
+        playerBoard.ClearBoard();
+        enemyBoard.ClearBoard();
+
+        UpdateScore();
+    }
+    private void OpenJournal()
+    {
+        if (journalManager != null)
+        {
+            journalManager.OpenJournal();
+        }
+        else
+        {
+            Debug.LogError("JournalManager nie jest przypisany!");
+        }
+    }
 
 
-
-
+    //public void OpenJournalAfterWin(int enemyIndex)
+    //{
+    //    UnityEngine.SceneManagement.SceneManager.LoadScene(journalSceneName);
+    //    JournalManager.journalManager.OpenJournalPage(enemyIndex);  
+    //}
 }
