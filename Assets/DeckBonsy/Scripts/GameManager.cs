@@ -48,7 +48,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Dialogues")]
     [SerializeField] private DialogueManager dialogueManager;
-
+    [SerializeField] private GameObject dialoguePanel;
 
 
 
@@ -299,88 +299,145 @@ public class GameManager : MonoBehaviour
     }
     private void CheckForRoundEnd()
     {
+        if (!gameReady)
+            return; 
+
         bool isPlayerFull = playerBoard.IsBoardFull();
         bool isEnemyFull = enemyBoard.IsBoardFull();
 
         int playerScore = playerBoard.CountScore();
         int enemyScore = enemyBoard.CountScore();
 
-        if (isPlayerFull || isEnemyFull || playerScore >= scoreToWin || enemyScore >= scoreToWin)
-        {
-            string result = "";
+        bool boardFull = isPlayerFull || isEnemyFull;
+        bool playerWonByScore = playerScore >= scoreToWin;
+        bool enemyWonByScore = enemyScore >= scoreToWin;
 
-            if (playerScore >= scoreToWin && playerScore > enemyScore)
+        string result = "";
+
+        
+        if (playerWonByScore && playerScore > enemyScore)
+        {
+            result = "PLAYER WINS!";
+            
+            gameReady = false;
+            if (dialogueManager != null)
+            {
+                StartDialogueScene(dialogueManager.GetDialogueForRound(currentRound));
+            }
+            else
+            {
+                Debug.LogError("Brak przypisanego DialogueManagera!");
+            }
+        }
+        else if (enemyWonByScore && enemyScore > playerScore)
+        {
+            result = "ENEMY WINS!";
+            gameReady = false;
+            endGamePanel.SetActive(true);
+            scoreText.text = $"PLAYER: {playerScore}    ENEMY: {enemyScore}";
+            resultText.text = result.ToUpper();
+        }
+        else if (boardFull)
+        {
+            if (playerScore > enemyScore)
             {
                 result = "PLAYER WINS!";
-                currentRound++;
+              
+                gameReady = false;
                 if (dialogueManager != null)
                 {
-                    dialogueManager.StartDialogue(dialogueManager.GetDialogueForRound(currentRound));
+                    StartDialogueScene(dialogueManager.GetDialogueForRound(currentRound));
+                }
+                else
+                {
+                    Debug.LogError("Brak przypisanego DialogueManagera!");
                 }
             }
-            else if (enemyScore >= scoreToWin && enemyScore > playerScore)
+            else if (enemyScore > playerScore)
             {
                 result = "ENEMY WINS!";
                 gameReady = false;
                 endGamePanel.SetActive(true);
-                scoreText.text = "PLAYER: " + playerScore + "    ENEMY: " + enemyScore;
+                scoreText.text = $"PLAYER: {playerScore}    ENEMY: {enemyScore}";
                 resultText.text = result.ToUpper();
             }
-            else if (isPlayerFull || isEnemyFull)
+            else
             {
-                if (playerScore > enemyScore)
+                result = "DRAW!";
+                
+                gameReady = false;
+                if (dialogueManager != null)
                 {
-                    result = "PLAYER WINS!";
-                    currentRound++;
-                    if (dialogueManager != null)
-                    {
-                        dialogueManager.StartDialogue(dialogueManager.GetDialogueForRound(currentRound));
-                    }
-                }
-                else if (enemyScore > playerScore)
-                {
-                    result = "ENEMY WINS!";
-                    gameReady = false;
-                    endGamePanel.SetActive(true);
-                    scoreText.text = "PLAYER: " + playerScore + "    ENEMY: " + enemyScore;
-                    resultText.text = result.ToUpper();
+                    StartDialogueScene(dialogueManager.GetDialogueForRound(currentRound));
                 }
                 else
                 {
-                    result = "DRAW!";
-                    if (dialogueManager != null)
-                    {
-                        dialogueManager.StartDialogue(dialogueManager.GetDialogueForRound(currentRound));
-                    }
+                    Debug.LogError("Brak przypisanego DialogueManagera!");
                 }
             }
+        }
 
+        if (!string.IsNullOrEmpty(result))
+        {
             Debug.Log("ROUND OVER!");
-            Debug.Log("Player: " + playerScore + "  Enemy: " + enemyScore);
+            Debug.Log($"Player: {playerScore}  Enemy: {enemyScore}");
             Debug.Log(result);
-
-            UpdateScore();
         }
     }
 
+    public void StartDialogueScene(DialogueData dialogue)
+    {
+        gameReady = false; 
+        dialoguePanel.SetActive(true); 
+        dialogueManager.StartDialogue(dialogue);
+        currentRound++;
+
+
+        dialogueManager.OnDialogueEnd -= ContinueGameAfterDialogue;
+        dialogueManager.OnDialogueEnd += ContinueGameAfterDialogue;
+    }
+
+    private void ContinueGameAfterDialogue()
+    {
+        dialoguePanel.SetActive(false);  
+
+        
+        gameReady = true;  
+        isPlayerTurn = true;  
+        chosenCard = false;
+        chosenColumn = false;
+
+       
+        DeckManager.deckManager.ResetDeck();
+        HandManager.handManager.ClearHand();
+        playerBoard.ClearBoard();
+        enemyBoard.ClearBoard();
+
+        UpdateScore();  
+
+        
+    }
 
     private void RestartGame()
-        {
-            endGamePanel.SetActive(false);
-            gameReady = true;
-            isPlayerTurn = true;
-            chosenCard = false;
-            chosenColumn = false;
+    {
+       
+        endGamePanel.SetActive(false);  
+        gameReady = true;  
+        isPlayerTurn = true;  
+        chosenCard = false;
+        chosenColumn = false;
 
-            DeckManager.deckManager.ResetDeck();
-            HandManager.handManager.ClearHand();
-            playerBoard.ClearBoard();
-            enemyBoard.ClearBoard();
+       
+        DeckManager.deckManager.ResetDeck();
+        HandManager.handManager.ClearHand();
+        playerBoard.ClearBoard();
+        enemyBoard.ClearBoard();
 
-            UpdateScore();
-        }
+      
+        UpdateScore();
+    }
 
-    
+
 
 
 
