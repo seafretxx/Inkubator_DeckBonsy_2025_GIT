@@ -947,10 +947,10 @@ MonoBehaviour:
   - {fileID: 989933992}
   npcImageHolder: {fileID: 0}
   backgroundImageHolder: {fileID: 0}
-  npcImageRound0: {fileID: 0}
-  backgroundImageRound0: {fileID: 0}
-  npcImageRound1: {fileID: 0}
-  backgroundImageRound1: {fileID: 0}
+  npcImageRound0: {fileID: 21300000, guid: 8f7ea6833aabddd4392dbf56b4605b8e, type: 3}
+  backgroundImageRound0: {fileID: 21300000, guid: 2ad83045b4da531409a6aac4bf2e60e5, type: 3}
+  npcImageRound1: {fileID: 21300000, guid: f466e242543f2bd47a67b9414966ea07, type: 3}
+  backgroundImageRound1: {fileID: 21300000, guid: 2ad83045b4da531409a6aac4bf2e60e5, type: 3}
   buttonImageNormal: {fileID: 0}
   buttonImageHighlighted: {fileID: 0}
 --- !u!1 &513956720
@@ -5324,7 +5324,7 @@ MonoBehaviour:
   backgroundImageHolder: {fileID: 1460335142}
   npcImageRound0: {fileID: 21300000, guid: 8f7ea6833aabddd4392dbf56b4605b8e, type: 3}
   backgroundImageRound0: {fileID: 21300000, guid: 2ad83045b4da531409a6aac4bf2e60e5, type: 3}
-  npcImageRound1: {fileID: 21300000, guid: 8f7ea6833aabddd4392dbf56b4605b8e, type: 3}
+  npcImageRound1: {fileID: 21300000, guid: f466e242543f2bd47a67b9414966ea07, type: 3}
   backgroundImageRound1: {fileID: 21300000, guid: 2ad83045b4da531409a6aac4bf2e60e5, type: 3}
   buttonImageNormal: {fileID: 21300000, guid: 956168a9d2faece4aadf7e57aa7a4975, type: 3}
   buttonImageHighlighted: {fileID: 21300000, guid: 2406f2a57f42a4b40883e03f122afcb4, type: 3}
