@@ -39,7 +39,7 @@ public class HandManager : MonoBehaviour
 
     public void HideCardDescription()
     {
-        descriptionBox.SetActive(false);
+      descriptionBox.SetActive(true);
     }
     public int GetMaxHandSize()
     {

@@ -84,13 +84,13 @@ public class CardContainer : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public void OnPointerEnter(PointerEventData eventData)
     {
         //Debug.Log("ONMOUSEOVER!" + cardInfo + isPlayerCard);
-        if (cardInfo != null && isPlayerCard)
+        if (cardInfo != null )//&& isPlayerCard)
             HandManager.handManager.ShowCardDescription(cardInfo.cardDescription);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         if (isPlayerCard)
-            HandManager.handManager.HideCardDescription();
+           HandManager.handManager.HideCardDescription();
     }
 }
