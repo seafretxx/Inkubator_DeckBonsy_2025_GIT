@@ -6,12 +6,14 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager gameManager { get; private set; }
 
+
     [Header("Main Variables")]
     [SerializeField] public bool isPlayerTurn { get; private set; }
     [SerializeField] private bool gameReady;
     [SerializeField] private bool isCardBeingPlayed;
     [SerializeField] private CardContainer cardContainerBeingPlayed;
     [SerializeField] private int scoreToWin;
+    [SerializeField] private int currentRound;
 
 
     [Header("Input System")]
@@ -40,6 +42,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private UnityEngine.UI.Button restartButton;
 
+    [Header("Draw Texts")]
+    [SerializeField] private GameObject playerDrawText;
+    [SerializeField] private GameObject enemyDrawText;
+
+    [Header("Dialogues")]
+    [SerializeField] private DialogueManager dialogueManager;
+
 
 
 
@@ -65,10 +74,12 @@ public class GameManager : MonoBehaviour
         chosenColumn = false;
         isPlayerTurn = true;
         gameReady = true;
-        scoreToWin = 40;
+        scoreToWin = 5;
         UpdateScore();
         endGamePanel.SetActive(false);
         restartButton.onClick.AddListener(RestartGame);
+        currentRound = 0;
+        
 
     }
     //if (!gameReady) CheckForRoundEnd();
@@ -210,12 +221,14 @@ public class GameManager : MonoBehaviour
             Debug.Log("Player 1's turn has ended.");
             isPlayerTurn = false;
             Debug.Log("Now it's Player 2's turn.");
+            UpdateDrawTexts();
         }
         else
         {
             Debug.Log("Player 2's turn has ended.");
             isPlayerTurn = true;
             Debug.Log("Now it's Player 1's turn.");
+            UpdateDrawTexts();
         }
         UpdateBackground();
     }
@@ -228,6 +241,19 @@ public class GameManager : MonoBehaviour
         else
         {
             backgroundImage.sprite = enemyBackground;
+        }
+    }
+    private void UpdateDrawTexts()
+    {
+        if (isPlayerTurn)
+        {
+            playerDrawText.SetActive(true);
+            enemyDrawText.SetActive(false);
+        }
+        else
+        {
+            playerDrawText.SetActive(false);
+            enemyDrawText.SetActive(true);
         }
     }
     public bool GetPlayerTurn()
@@ -269,6 +295,7 @@ public class GameManager : MonoBehaviour
     {
         playerScoreCounter.text = ("Your score:\n" + playerBoard.CountScore());
         enemyScoreCounter.text = ("Enemy score:\n" + enemyBoard.CountScore());
+        CheckForRoundEnd();
     }
     private void CheckForRoundEnd()
     {
@@ -278,35 +305,66 @@ public class GameManager : MonoBehaviour
         int playerScore = playerBoard.CountScore();
         int enemyScore = enemyBoard.CountScore();
 
-        
-
         if (isPlayerFull || isEnemyFull || playerScore >= scoreToWin || enemyScore >= scoreToWin)
         {
-            
-            string result;
+            string result = "";
 
-            if (playerScore > enemyScore)
+            if (playerScore >= scoreToWin && playerScore > enemyScore)
+            {
                 result = "PLAYER WINS!";
-            else if (enemyScore > playerScore)
+                currentRound++;
+                if (dialogueManager != null)
+                {
+                    dialogueManager.StartDialogue(dialogueManager.GetDialogueForRound(currentRound));
+                }
+            }
+            else if (enemyScore >= scoreToWin && enemyScore > playerScore)
+            {
                 result = "ENEMY WINS!";
-            else
-                result = "DRAW!";
+                gameReady = false;
+                endGamePanel.SetActive(true);
+                scoreText.text = "PLAYER: " + playerScore + "    ENEMY: " + enemyScore;
+                resultText.text = result.ToUpper();
+            }
+            else if (isPlayerFull || isEnemyFull)
+            {
+                if (playerScore > enemyScore)
+                {
+                    result = "PLAYER WINS!";
+                    currentRound++;
+                    if (dialogueManager != null)
+                    {
+                        dialogueManager.StartDialogue(dialogueManager.GetDialogueForRound(currentRound));
+                    }
+                }
+                else if (enemyScore > playerScore)
+                {
+                    result = "ENEMY WINS!";
+                    gameReady = false;
+                    endGamePanel.SetActive(true);
+                    scoreText.text = "PLAYER: " + playerScore + "    ENEMY: " + enemyScore;
+                    resultText.text = result.ToUpper();
+                }
+                else
+                {
+                    result = "DRAW!";
+                    if (dialogueManager != null)
+                    {
+                        dialogueManager.StartDialogue(dialogueManager.GetDialogueForRound(currentRound));
+                    }
+                }
+            }
 
             Debug.Log("ROUND OVER!");
             Debug.Log("Player: " + playerScore + "  Enemy: " + enemyScore);
             Debug.Log(result);
 
-            gameReady = false;
-
-
-            endGamePanel.SetActive(true);
-            scoreText.text = "PLAYER: " + playerScore + "    ENEMY: " + enemyScore;
-            resultText.text = result.ToUpper();
-
+            UpdateScore();
         }
     }
 
-     private void RestartGame()
+
+    private void RestartGame()
         {
             endGamePanel.SetActive(false);
             gameReady = true;
@@ -321,6 +379,9 @@ public class GameManager : MonoBehaviour
 
             UpdateScore();
         }
+
+    
+
 
 
 }
