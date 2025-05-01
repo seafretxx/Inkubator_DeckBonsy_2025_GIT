@@ -1803,7 +1803,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -504, y: 238}
+  m_AnchoredPosition: {x: -541, y: 80}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &981905462
@@ -1891,7 +1891,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: -25.244568, y: 0, z: -373.6214, w: -279.37454}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -3464,7 +3464,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 0}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3495,10 +3495,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   journalPanel: {fileID: 1435138750}
-  journalText: {fileID: 981905462}
   nextPageButton: {fileID: 1464106894}
   previousPageButton: {fileID: 1481405347}
   closeButton: {fileID: 961545855}
+  pageImage: {fileID: 1817246391}
+  pageSprites:
+  - {fileID: 21300000, guid: 909b514bab11dc34fa97a3e0e91caa2f, type: 3}
+  - {fileID: 21300000, guid: 38b3a4ecbdc58c249b2a3ca3a2075aa6, type: 3}
+  - {fileID: 21300000, guid: fad12e6818a31c043b873eb718db7266, type: 3}
+  pageText: {fileID: 981905462}
 --- !u!1 &1460335140
 GameObject:
   m_ObjectHideFlags: 0
@@ -4286,7 +4291,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -4450,10 +4455,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   journalPanel: {fileID: 1435138750}
-  journalText: {fileID: 981905462}
   nextPageButton: {fileID: 1464106894}
   previousPageButton: {fileID: 1481405347}
   closeButton: {fileID: 961545855}
+  pageImage: {fileID: 1817246391}
+  pageSprites:
+  - {fileID: 21300000, guid: 909b514bab11dc34fa97a3e0e91caa2f, type: 3}
+  - {fileID: 21300000, guid: 38b3a4ecbdc58c249b2a3ca3a2075aa6, type: 3}
+  - {fileID: 21300000, guid: fad12e6818a31c043b873eb718db7266, type: 3}
+  pageText: {fileID: 981905462}
 --- !u!4 &1860225737
 Transform:
   m_ObjectHideFlags: 0

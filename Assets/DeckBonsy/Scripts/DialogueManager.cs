@@ -7,6 +7,7 @@ using TMPro;
 public class DialogueManager : MonoBehaviour
 {
     public event Action OnDialogueEnd;
+    private int lastPlayerChoice;
 
     [SerializeField] private GameObject dialoguePanel;
     [SerializeField] private TextMeshProUGUI npcText;
@@ -31,7 +32,15 @@ public class DialogueManager : MonoBehaviour
         HideDialoguePanel();
     }
 
-    
+    public void SetLastPlayerChoice(int choice)
+    {
+        lastPlayerChoice = choice;
+    }
+    public int GetLastPlayerChoice()
+    {
+        return lastPlayerChoice; 
+    }
+
     public void HideDialoguePanel()
     {
         dialoguePanel.SetActive(false);
@@ -129,7 +138,8 @@ public class DialogueManager : MonoBehaviour
         Debug.Log("Wybra³eœ opcjê: " + currentDialogue.playerChoices[choiceIndex]);
         Debug.Log("To prowadzi do zakoñczenia nr: " + currentDialogue.endings[choiceIndex]);
 
-        // (wiêcej logiki)
+        SetLastPlayerChoice(choiceIndex);
+
         EndDialogue();
     }
 

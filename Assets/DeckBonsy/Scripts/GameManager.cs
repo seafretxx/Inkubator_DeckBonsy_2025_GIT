@@ -357,6 +357,16 @@ public class GameManager : MonoBehaviour
     {
         dialoguePanel.SetActive(false);
 
+        int npcIndex = currentRound - 1; 
+        int playerChoice = dialogueManager.GetLastPlayerChoice();
+
+        if (JournalManager.journalManager != null && npcIndex >= 0)
+        {
+            JournalManager.journalManager.SaveChoiceAndOpenJournal(npcIndex, playerChoice);
+        }
+
+        currentRound++;
+
         gameReady = true;
         isPlayerTurn = true;
 
@@ -368,11 +378,19 @@ public class GameManager : MonoBehaviour
         UpdateScore();
     }
 
+
+
+
+
+
+
+
+
     //private void OpenJournalAfterWin()
     //{
-       
+
     //    SceneManager.LoadScene(journalSceneName);
-   // }
+    // }
 
     private void RestartGame()
     {
@@ -393,18 +411,19 @@ public class GameManager : MonoBehaviour
     {
         if (journalManager != null)
         {
-            journalManager.OpenJournal();
-        }
-        else
-        {
-            Debug.LogError("JournalManager nie jest przypisany!");
+            journalManager.OpenJournal(0); 
         }
     }
+
 
 
     //public void OpenJournalAfterWin(int enemyIndex)
     //{
     //    UnityEngine.SceneManagement.SceneManager.LoadScene(journalSceneName);
     //    JournalManager.journalManager.OpenJournalPage(enemyIndex);  
+    //}
+    // if (JournalManager.journalManager != null)
+    //{
+    //JournalManager.journalManager.AddNoteToPage(2, "Walczyłam z lisem.");
     //}
 }
