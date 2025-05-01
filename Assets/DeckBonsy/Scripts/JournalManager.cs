@@ -236,5 +236,21 @@ public class JournalManager : MonoBehaviour
         OpenJournal(npcIndex);
     }
 
+    public void OpenEmptyOrExistingJournalPage(int pageIndex)
+    {
+        if (pageIndex >= pageSprites.Count)
+        {
+            while (pageSprites.Count <= pageIndex)
+            {
+                pageSprites.Add(null); 
+            }
+        }
+
+        // Nie twórz tekstu jeœli nie ma ¿adnych danych — tylko otwórz dziennik
+        currentPage = pageIndex;
+        journalPanel.SetActive(true);
+        UpdateJournalPage();
+    }
+
 
 }
