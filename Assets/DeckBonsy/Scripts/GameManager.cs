@@ -64,7 +64,17 @@ public class GameManager : MonoBehaviour
         {
             gameManager = this;
         }
+
+        if (journalManager == null)
+        {
+            journalManager = FindObjectOfType<JournalManager>();
+            if (journalManager == null)
+            {
+                Debug.LogError("Nie znaleziono JournalManager w scenie!");
+            }
+        }
     }
+
 
     private void Start()
     {
@@ -360,6 +370,11 @@ public class GameManager : MonoBehaviour
         int npcIndex = currentRound - 1; 
         int playerChoice = dialogueManager.GetLastPlayerChoice();
 
+        if (gameReady && npcIndex >= 0) 
+        {
+            JournalManager.journalManager.SaveChoiceAndOpenJournal(npcIndex, playerChoice);
+        }
+
         if (JournalManager.journalManager != null && npcIndex >= 0)
         {
             JournalManager.journalManager.SaveChoiceAndOpenJournal(npcIndex, playerChoice);
@@ -377,14 +392,6 @@ public class GameManager : MonoBehaviour
 
         UpdateScore();
     }
-
-
-
-
-
-
-
-
 
     //private void OpenJournalAfterWin()
     //{
@@ -409,9 +416,17 @@ public class GameManager : MonoBehaviour
     }
     private void OpenJournal()
     {
+        Debug.Log("Kliknięto przycisk dziennika");
+
         if (journalManager != null)
         {
-            journalManager.OpenJournal(0); 
+            Debug.Log("JournalManager istnieje");
+            int pageToOpen = currentRound > 0 ? currentRound - 1 : 0;
+            journalManager.OpenEmptyOrExistingJournalPage(pageToOpen);
+        }
+        else
+        {
+            Debug.LogError("JournalManager NIEprzypisany!");
         }
     }
 
