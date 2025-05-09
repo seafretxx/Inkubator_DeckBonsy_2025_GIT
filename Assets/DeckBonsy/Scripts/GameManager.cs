@@ -96,10 +96,9 @@ public class GameManager : MonoBehaviour
             journalButton.SetActive(true);
             journalButton.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(OpenJournal);
         }
-        if (currentRound == 0 && PlayerPrefs.HasKey("JournalPage_0"))
+        if (currentRound == 0 && !PlayerPrefs.HasKey("JournalClearedOnce"))
         {
-            PlayerPrefs.DeleteKey("JournalPage_0");
-            PlayerPrefs.Save();
+            ClearAllJournalDataOnce();
         }
     }
 
@@ -304,17 +303,16 @@ public class GameManager : MonoBehaviour
         dialoguePanel.SetActive(false);
 
         int npcIndex = currentRound;
-        int playerChoice = dialogueManager.GetLastPlayerChoice(); 
+        int playerChoice = dialogueManager.GetLastPlayerChoice();
 
         if (!journalOpenedThisDialogue && npcIndex >= 0 && playerChoice >= 0 && journalUpdateManager != null)
         {
             journalOpenedThisDialogue = true;
-
             journalUpdateManager.ShowNoteAfterDialogue(npcIndex, playerChoice);
         }
 
         currentRound++;
-        journalOpenedThisDialogue = false; 
+        journalOpenedThisDialogue = false;
         gameReady = true;
         isPlayerTurn = true;
 
@@ -325,6 +323,7 @@ public class GameManager : MonoBehaviour
 
         UpdateScore();
     }
+
 
 
     private void RestartGame()
@@ -356,4 +355,18 @@ public class GameManager : MonoBehaviour
             Debug.LogError("Brak JournalDisplayManager w scenie!");
         }
     }
+
+    private void ClearAllJournalDataOnce()
+    {
+        for (int i = 0; i < 20; i++) // max 20 stron (jest narazie 4)
+        {
+            PlayerPrefs.DeleteKey("JournalPage_" + i);
+        }
+
+        PlayerPrefs.SetInt("JournalClearedOnce", 1);
+        PlayerPrefs.Save();
+
+        Debug.Log("Dziennik wyczyszczony jednorazowo przy starcie.");
+    }
+
 }

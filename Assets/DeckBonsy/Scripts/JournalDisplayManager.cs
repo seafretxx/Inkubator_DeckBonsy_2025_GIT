@@ -69,10 +69,7 @@ public class JournalDisplayManager : MonoBehaviour
 
             string text = JournalDataManager.Instance.GetTextForPage(currentPage);
 
-            if (!string.IsNullOrWhiteSpace(text))
-                pageText.text = text;
-            else
-                pageText.text = "<i>Brak zapisu dla tej strony</i>";
+            pageText.text = string.IsNullOrWhiteSpace(text) ? "<i>Brak zapisu dla tej strony</i>" : text;
         }
     }
 }

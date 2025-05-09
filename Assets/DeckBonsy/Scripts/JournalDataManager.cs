@@ -28,22 +28,23 @@ public class JournalDataManager : MonoBehaviour
 
     public void AddOrUpdateNote(int pageIndex, string note, bool overwrite = false)
     {
-        if (string.IsNullOrWhiteSpace(note)) return;
-
-        if (overwrite || !dynamicTexts.ContainsKey(pageIndex))
+        if (overwrite)
         {
             dynamicTexts[pageIndex] = note;
         }
         else
         {
-            if (!dynamicTexts[pageIndex].Contains(note))
+            if (!dynamicTexts.ContainsKey(pageIndex) || !dynamicTexts[pageIndex].Contains(note))
             {
-                dynamicTexts[pageIndex] += "\n" + note;
+                dynamicTexts[pageIndex] = dynamicTexts.ContainsKey(pageIndex)
+                    ? dynamicTexts[pageIndex] + "\n" + note
+                    : note;
             }
         }
 
         SaveJournalData();
     }
+
 
 
 
@@ -85,6 +86,18 @@ public class JournalDataManager : MonoBehaviour
         }
         PlayerPrefs.Save();
         Debug.Log("Wyczyszczono dane dziennika.");
+    }
+
+    [ContextMenu("Resetuj dziennik")]
+    public void ResetJournalManually()
+    {
+        for (int i = 0; i < 20; i++)
+            PlayerPrefs.DeleteKey("JournalPage_" + i);
+
+        PlayerPrefs.DeleteKey("JournalClearedOnce");
+        PlayerPrefs.Save();
+
+        Debug.Log("Rêczne czyszczenie zakoñczone.");
     }
 
 }
