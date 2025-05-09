@@ -7,11 +7,21 @@ using System.Collections.Generic;
 
 public class JournalUpdateManager : MonoBehaviour
 {
+    public static JournalUpdateManager Instance;
+
     public GameObject journalPanel;
     public TextMeshProUGUI pageText;
     public Image pageImage;
     public List<Sprite> pageSprites;
     private Coroutine typingCoroutine;
+
+    private void Awake()
+    {
+        if (Instance == null)
+            Instance = this;
+        else
+            Destroy(gameObject);
+    }
 
     public void ShowNoteAfterDialogue(int npcIndex, int playerChoice)
     {
@@ -44,13 +54,24 @@ public class JournalUpdateManager : MonoBehaviour
         journalPanel.SetActive(false);
     }
 
-    private string GetChoiceText(int npcIndex, int playerChoice)
+    public string GetChoiceText(int npcIndex, int playerChoice)
     {
         if (npcIndex == 0)
-            return playerChoice == 0 ? "Gracz wybra³ opcjê 1: Rozmowa z NPC 1." : "Gracz wybra³ opcjê 2: Zignorowanie NPC 1.";
+        {
+            if (playerChoice == 0)
+                return "Gracz powiedzia³: 'Halo!'.\nNPC odpowiedzia³: 'Czeœæ! Mi³o Ciê widzieæ.'";
+            else
+                return "Gracz powiedzia³: 'Nie teraz'.\nNPC odpowiedzia³: 'Rozumiem. Mo¿e póŸniej?'.";
+        }
         else if (npcIndex == 1)
-            return playerChoice == 0 ? "Gracz wybra³ opcjê 1: Rozmowa z NPC 2." : "Gracz wybra³ opcjê 2: Zignorowanie NPC 2.";
-        else
-            return $"Gracz wybra³ opcjê {playerChoice + 1}: z NPC {npcIndex}.";
+        {
+            if (playerChoice == 0)
+                return "Gracz powiedzia³: 'Siema!'.\nNPC odpowiedzia³: 'Yo, stary znajomy!'.";
+            else
+                return "Gracz powiedzia³: 'Nie dzisiaj'.\nNPC odpowiedzia³: 'Szkoda...'.";
+        }
+
+        return $"Gracz wybra³ opcjê {playerChoice + 1} z NPC {npcIndex}.";
     }
+
 }
