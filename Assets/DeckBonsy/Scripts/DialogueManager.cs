@@ -38,8 +38,9 @@ public class DialogueManager : MonoBehaviour
     }
     public int GetLastPlayerChoice()
     {
-        return lastPlayerChoice; 
+        return lastPlayerChoice + 1; 
     }
+
 
     public void HideDialoguePanel()
     {
