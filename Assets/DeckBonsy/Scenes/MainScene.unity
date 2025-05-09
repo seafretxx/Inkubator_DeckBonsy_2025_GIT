@@ -982,6 +982,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa61e8bf966e1ad4a952548c5eaca4d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  journalPanel: {fileID: 1435138750}
+  pageText: {fileID: 981905462}
+  pageImage: {fileID: 1817246391}
+  pageSprites:
+  - {fileID: 21300000, guid: 2b802f76cbf1b91419f33c0486fd3329, type: 3}
+  - {fileID: 21300000, guid: 38b3a4ecbdc58c249b2a3ca3a2075aa6, type: 3}
+  - {fileID: 21300000, guid: fad12e6818a31c043b873eb718db7266, type: 3}
 --- !u!4 &484773428
 Transform:
   m_ObjectHideFlags: 0
