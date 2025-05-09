@@ -27,8 +27,13 @@ public class JournalUpdateManager : MonoBehaviour
     {
         string note = GetChoiceText(npcIndex, playerChoice);
 
-        JournalDataManager.Instance.AddOrUpdateNote(npcIndex, note, true); 
+        if (string.IsNullOrEmpty(note) || npcIndex < 0 || npcIndex >= pageSprites.Count)
+        {
+            Debug.LogWarning("B³êdny indeks NPC lub pusty tekst!");
+            return;
+        }
 
+        JournalDataManager.Instance.AddOrUpdateNote(npcIndex, note);
 
         journalPanel.SetActive(true);
         pageImage.sprite = pageSprites[npcIndex];
@@ -38,6 +43,8 @@ public class JournalUpdateManager : MonoBehaviour
 
         typingCoroutine = StartCoroutine(TypeNote(note));
     }
+
+
 
     private IEnumerator TypeNote(string note)
     {
