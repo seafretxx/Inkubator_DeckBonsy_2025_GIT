@@ -72,4 +72,16 @@ public class JournalDataManager : MonoBehaviour
     {
         return dynamicTexts.ContainsKey(pageIndex);
     }
+    [ContextMenu("Wyczyœæ wszystkie zapisy dziennika")]
+    public void ClearAllJournalData()
+    {
+        for (int i = 0; i < 20; i++)
+        {
+            string key = "JournalPage_" + i;
+            PlayerPrefs.DeleteKey(key);
+        }
+        PlayerPrefs.Save();
+        Debug.Log("Wyczyszczono dane dziennika.");
+    }
+
 }
