@@ -74,6 +74,7 @@ public class GameManager : MonoBehaviour
                 Debug.LogError("JournalUpdateManager nie znaleziony!");
             }
         }
+
     }
 
     private void Start()
@@ -94,6 +95,11 @@ public class GameManager : MonoBehaviour
         {
             journalButton.SetActive(true);
             journalButton.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(OpenJournal);
+        }
+        if (currentRound == 0 && PlayerPrefs.HasKey("JournalPage_0"))
+        {
+            PlayerPrefs.DeleteKey("JournalPage_0");
+            PlayerPrefs.Save();
         }
     }
 

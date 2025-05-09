@@ -60,6 +60,8 @@ public class JournalDataManager : MonoBehaviour
     {
         for (int i = 0; i < 20; i++)
         {
+            if (i == 0) continue; 
+
             string key = "JournalPage_" + i;
             if (PlayerPrefs.HasKey(key))
             {
@@ -67,6 +69,7 @@ public class JournalDataManager : MonoBehaviour
             }
         }
     }
+
 
     public bool HasContent(int pageIndex)
     {
