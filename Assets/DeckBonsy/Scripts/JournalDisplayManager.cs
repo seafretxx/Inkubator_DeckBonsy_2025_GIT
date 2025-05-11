@@ -41,7 +41,14 @@ public class JournalDisplayManager : MonoBehaviour
     private void CloseJournal()
     {
         journalPanel.SetActive(false);
+
+        var manager = JournalUpdateManager.Instance;
+        if (manager != null)
+        {
+            manager.OnJournalClosedByPlayer(); // wywo³uje callback z GameManagera
+        }
     }
+
 
     private void NextPage()
     {

@@ -3,11 +3,12 @@ using TMPro;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
-
+using System;
 
 public class JournalUpdateManager : MonoBehaviour
 {
     public static JournalUpdateManager Instance;
+    private Action journalClosedCallback;
 
     public GameObject journalPanel;
     public TextMeshProUGUI pageText;
@@ -23,17 +24,20 @@ public class JournalUpdateManager : MonoBehaviour
             Destroy(gameObject);
     }
 
-    public void ShowNoteAfterDialogue(int npcIndex, int playerChoice)
+    public void ShowNoteAfterDialogue(int npcIndex, int playerChoice, Action onNoteComplete)
     {
         string note = GetChoiceText(npcIndex, playerChoice);
 
         if (string.IsNullOrEmpty(note) || npcIndex < 0 || npcIndex >= pageSprites.Count)
         {
             Debug.LogWarning("B³êdny indeks NPC lub pusty tekst!");
+            onNoteComplete?.Invoke(); // dalej kontynuujemy
             return;
         }
 
         JournalDataManager.Instance.AddOrUpdateNote(npcIndex, note);
+
+        journalClosedCallback = onNoteComplete; // <-- ZAPAMIÊTAJ CALLBACK
 
         journalPanel.SetActive(true);
         pageImage.sprite = pageSprites[npcIndex];
@@ -44,8 +48,6 @@ public class JournalUpdateManager : MonoBehaviour
         typingCoroutine = StartCoroutine(TypeNote(note));
     }
 
-
-
     private IEnumerator TypeNote(string note)
     {
         pageText.text = "";
@@ -54,12 +56,29 @@ public class JournalUpdateManager : MonoBehaviour
             pageText.text += c;
             yield return new WaitForSeconds(0.03f);
         }
+        //gracz sam zamyka dziennik
     }
 
     public void ClosePanel()
     {
         journalPanel.SetActive(false);
+
+        if (journalClosedCallback != null)
+        {
+            var callback = journalClosedCallback;
+            journalClosedCallback = null; 
+            callback.Invoke();
+        }
     }
+    public void OnJournalClosedByPlayer()
+    {
+        if (journalClosedCallback != null)
+        {
+            journalClosedCallback.Invoke();
+            journalClosedCallback = null;
+        }
+    }
+
 
     public string GetChoiceText(int npcIndex, int playerChoice)
     {
@@ -80,5 +99,4 @@ public class JournalUpdateManager : MonoBehaviour
 
         return $"Gracz wybra³ opcjê {playerChoice + 1} z NPC {npcIndex}.";
     }
-
 }

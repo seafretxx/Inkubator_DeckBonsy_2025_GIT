@@ -33,6 +33,51 @@ public class DialogueManager : MonoBehaviour
         HideDialoguePanel();
     }
 
+    public DialogueData GetIntroDialogueForRound(int round) //przed rozgrywka
+    {
+        switch (round)
+        {
+            case 0:
+                return new DialogueData
+                {
+                    npcLine = "NPC1 Witaj",
+                    playerChoices = new string[0],
+                    endings = new int[0],
+                    npcImage = npcImageRound0,
+                    backgroundImage = backgroundImageRound0
+                };
+            case 1:
+                return new DialogueData
+                {
+                    npcLine = "NPC2 WItaj",
+                    playerChoices = new string[0],
+                    endings = new int[0],
+                    npcImage = npcImageRound1,
+                    backgroundImage = backgroundImageRound1
+                };
+            // kolejne NPC
+            default:
+                return null;
+        }
+    }
+
+    public void StartIntroDialogue(DialogueData dialogue)
+    {
+        ShowDialoguePanel();
+        currentDialogue = dialogue;
+        npcText.text = dialogue.npcLine;
+
+        if (dialogue.backgroundImage != null)
+            backgroundImageHolder.sprite = dialogue.backgroundImage;
+
+        if (dialogue.npcImage != null)
+            npcImageHolder.sprite = dialogue.npcImage;
+
+        HideChoiceButtons();
+
+        StartCoroutine(AutoEndDialogue());
+    }
+
     public void SetLastPlayerChoice(int choice)
     {
         lastPlayerChoice = choice;
@@ -66,7 +111,15 @@ public class DialogueManager : MonoBehaviour
 
         HideChoiceButtons();
 
-        StartCoroutine(ShowChoicesAfterNpcSpeech(dialogue.npcLine));
+        if (dialogue.playerChoices == null || dialogue.playerChoices.Length == 0)
+        {
+            StartCoroutine(AutoEndDialogue());
+        }
+        else
+        {
+            StartCoroutine(ShowChoicesAfterNpcSpeech(dialogue.npcLine));
+        }
+
     }
 
     private void HideChoiceButtons()
@@ -213,4 +266,10 @@ public class DialogueManager : MonoBehaviour
     {
         OnDialogueEnd?.Invoke();
     }
+    private IEnumerator AutoEndDialogue()
+    {
+        yield return new WaitForSeconds(npcText.text.Length * 0.05f + 2f);
+        EndDialogue();
+    }
+
 }
