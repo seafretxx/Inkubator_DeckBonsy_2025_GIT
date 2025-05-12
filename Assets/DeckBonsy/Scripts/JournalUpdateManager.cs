@@ -33,16 +33,16 @@ public class JournalUpdateManager : MonoBehaviour
 
     if (string.IsNullOrEmpty(note) || npcIndex < 0 || npcIndex >= pageSprites.Count)
     {
-        Debug.LogWarning("❌ Błędny indeks NPC lub pusty tekst!");
         onNoteComplete?.Invoke(); 
         return;
     }
 
-    Debug.Log("✅ Warunki OK, pokazuję dziennik!");
+        JournalDataManager.Instance.AddOrUpdateNote(npcIndex, note);
+        JournalDataManager.Instance.SaveJournalData();
 
-    journalClosedCallback = onNoteComplete;
-    journalPanel.SetActive(true);
-    pageImage.sprite = pageSprites[npcIndex];
+        journalClosedCallback = onNoteComplete;
+        journalPanel.SetActive(true);
+        pageImage.sprite = pageSprites[npcIndex];
 
     if (typingCoroutine != null)
         StopCoroutine(typingCoroutine);
