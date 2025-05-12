@@ -18,7 +18,7 @@ public class JournalDisplayManager : MonoBehaviour
 
     private void Start()
     {
-        journalPanel.SetActive(false);
+        //journalPanel.SetActive(false); //na chuj ja to dawalam?
 
         if (nextPageButton) nextPageButton.onClick.AddListener(NextPage);
         if (previousPageButton) previousPageButton.onClick.AddListener(PreviousPage);
