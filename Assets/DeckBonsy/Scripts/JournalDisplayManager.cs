@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 
 public class JournalDisplayManager : MonoBehaviour
 {
@@ -12,20 +13,55 @@ public class JournalDisplayManager : MonoBehaviour
     public Button nextPageButton;
     public Button previousPageButton;
     public Button closeButton;
+
+    [Header("Arrow Buttons")]
+    [SerializeField] private Sprite leftArrowNormal;
+    [SerializeField] private Sprite leftArrowHighlighted;
+    [SerializeField] private Sprite rightArrowNormal;
+    [SerializeField] private Sprite rightArrowHighlighted;
+
+    [Header("Scene Button")]
+    [SerializeField] private Button journalSceneButton;
+    [SerializeField] private Sprite journalNormal;
+    [SerializeField] private Sprite journalHighlighted;
+
+    [Header("Page Sprites")]
     public List<Sprite> pageSprites;
 
     private int currentPage = 0;
 
     private void Start()
     {
-        //journalPanel.SetActive(false); //na chuj ja to dawalam?
         if (!journalPanel.activeSelf)
         {
             journalPanel.SetActive(false);
         }
+
         if (nextPageButton) nextPageButton.onClick.AddListener(NextPage);
         if (previousPageButton) previousPageButton.onClick.AddListener(PreviousPage);
         if (closeButton) closeButton.onClick.AddListener(CloseJournal);
+
+        if (nextPageButton) AddHoverEffect(nextPageButton, rightArrowNormal, rightArrowHighlighted);
+        if (previousPageButton) AddHoverEffect(previousPageButton, leftArrowNormal, leftArrowHighlighted);
+
+        if (journalSceneButton) AddHoverEffect(journalSceneButton, journalNormal, journalHighlighted);
+    }
+
+    private void AddHoverEffect(Button button, Sprite normal, Sprite highlighted)
+    {
+        var image = button.GetComponent<Image>();
+        if (image == null) return;
+
+        var trigger = button.GetComponent<EventTrigger>() ?? button.gameObject.AddComponent<EventTrigger>();
+        trigger.triggers.Clear();
+
+        var entryEnter = new EventTrigger.Entry { eventID = EventTriggerType.PointerEnter };
+        entryEnter.callback.AddListener((_) => image.sprite = highlighted);
+        trigger.triggers.Add(entryEnter);
+
+        var entryExit = new EventTrigger.Entry { eventID = EventTriggerType.PointerExit };
+        entryExit.callback.AddListener((_) => image.sprite = normal);
+        trigger.triggers.Add(entryExit);
     }
 
     public void OpenJournal(int pageIndex)
@@ -52,7 +88,6 @@ public class JournalDisplayManager : MonoBehaviour
         }
     }
 
-
     private void NextPage()
     {
         if (currentPage < pageSprites.Count - 1)
@@ -76,10 +111,9 @@ public class JournalDisplayManager : MonoBehaviour
         if (currentPage >= 0 && currentPage < pageSprites.Count)
         {
             pageImage.sprite = pageSprites[currentPage];
+
             string text = JournalDataManager.Instance.GetTextForPage(currentPage);
-            Debug.Log($"📖 DisplayManager: Loaded text for page {currentPage}: {text}");
             pageText.text = string.IsNullOrWhiteSpace(text) ? "<i>Brak zapisu dla tej strony</i>" : text;
         }
     }
-
 }
