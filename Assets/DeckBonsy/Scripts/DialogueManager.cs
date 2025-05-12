@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using UnityEngine;
 using TMPro;
 
 public class DialogueManager : MonoBehaviour
@@ -13,9 +13,9 @@ public class DialogueManager : MonoBehaviour
 
     [SerializeField] private GameObject dialoguePanel;
     [SerializeField] private TextMeshProUGUI npcText;
-    [SerializeField] private List<UnityEngine.UI.Button> choiceButtons;
-    [SerializeField] private UnityEngine.UI.Image npcImageHolder;
-    [SerializeField] private UnityEngine.UI.Image backgroundImageHolder;
+    [SerializeField] private List<Button> choiceButtons;
+    [SerializeField] private Image npcImageHolder;
+    [SerializeField] private Image backgroundImageHolder;
 
     [Header("Background Images")]
     [SerializeField] private Sprite npcImageRound0;
@@ -29,13 +29,15 @@ public class DialogueManager : MonoBehaviour
 
     private DialogueData currentDialogue;
     private int currentRound = 0;
+    private bool hasChosen = false;
+    private Coroutine fallbackCoroutine;
 
     private void Start()
     {
         HideDialoguePanel();
     }
 
-    public DialogueData GetIntroDialogueForRound(int round) //przed rozgrywka
+    public DialogueData GetIntroDialogueForRound(int round)
     {
         switch (round)
         {
@@ -51,59 +53,36 @@ public class DialogueManager : MonoBehaviour
             case 1:
                 return new DialogueData
                 {
-                    npcLine = "NPC2 WItaj",
+                    npcLine = "NPC2 Witaj",
                     playerChoices = new string[0],
                     endings = new int[0],
                     npcImage = npcImageRound1,
                     backgroundImage = backgroundImageRound1
                 };
-            // kolejne NPC
             default:
                 return null;
         }
     }
 
-    public void StartIntroDialogue(DialogueData dialogue)
-    {
-        ShowDialoguePanel();
-        currentDialogue = dialogue;
-        npcText.text = dialogue.npcLine;
+    public void SetLastPlayerChoice(int choice) => lastPlayerChoice = choice;
 
-        if (dialogue.backgroundImage != null)
-            backgroundImageHolder.sprite = dialogue.backgroundImage;
+    public int GetLastPlayerChoice() => lastPlayerChoice;
 
-        if (dialogue.npcImage != null)
-            npcImageHolder.sprite = dialogue.npcImage;
+    public void HideDialoguePanel() => dialoguePanel.SetActive(false);
 
-        HideChoiceButtons();
-
-        StartCoroutine(AutoEndDialogue());
-    }
-
-    public void SetLastPlayerChoice(int choice)
-    {
-        lastPlayerChoice = choice;
-    }
-    public int GetLastPlayerChoice()
-    {
-        return lastPlayerChoice;
-    }
-
-    public void HideDialoguePanel()
-    {
-        dialoguePanel.SetActive(false);
-    }
-
-    public void ShowDialoguePanel()
-    {
-        dialoguePanel.SetActive(true);
-    }
+    public void ShowDialoguePanel() => dialoguePanel.SetActive(true);
 
     public void StartDialogue(DialogueData dialogue)
     {
+        hasChosen = false;
         ShowDialoguePanel();
         currentDialogue = dialogue;
-        npcText.text = dialogue.npcLine;
+
+        if (dialogue == null)
+        {
+            Debug.LogWarning("Dialogue is null!");
+            return;
+        }
 
         if (dialogue.backgroundImage != null)
             backgroundImageHolder.sprite = dialogue.backgroundImage;
@@ -111,53 +90,61 @@ public class DialogueManager : MonoBehaviour
         if (dialogue.npcImage != null)
             npcImageHolder.sprite = dialogue.npcImage;
 
+        npcImageHolder.rectTransform.anchoredPosition = new Vector2(-500f, 0);
+        npcText.text = "";
         HideChoiceButtons();
+
+        StartCoroutine(AnimateNpcAndType(dialogue));
+    }
+
+    private IEnumerator AnimateNpcAndType(DialogueData dialogue)
+    {
+        Vector2 finalPos = new Vector2(196f, -96f);
+        Vector2 startPos = new Vector2(finalPos.x - 600f, finalPos.y);
+
+        npcImageHolder.rectTransform.anchoredPosition = startPos;
+
+        float duration = 0.6f;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            npcImageHolder.rectTransform.anchoredPosition = Vector2.Lerp(startPos, finalPos, elapsed / duration);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        npcImageHolder.rectTransform.anchoredPosition = finalPos;
+
+        yield return new WaitForSeconds(0.2f);
+        yield return StartCoroutine(TypewriterEffect(dialogue.npcLine));
 
         if (dialogue.playerChoices == null || dialogue.playerChoices.Length == 0)
         {
-            StartCoroutine(AutoEndDialogue());
+            yield return new WaitForSeconds(1f);
+            EndDialogue();
         }
         else
         {
-            StartCoroutine(ShowChoicesAfterNpcSpeech(dialogue.npcLine));
+            yield return new WaitForSeconds(0.3f);
+            ShowChoiceButtons();
         }
-
     }
-    private void AddHoverEffect(Button button)
+
+    private IEnumerator TypewriterEffect(string line)
     {
-        EventTrigger trigger = button.GetComponent<EventTrigger>();
-        if (trigger == null)
-            trigger = button.gameObject.AddComponent<EventTrigger>();
-
-        trigger.triggers.Clear();
-
-        var entryEnter = new EventTrigger.Entry { eventID = EventTriggerType.PointerEnter };
-        entryEnter.callback.AddListener((data) =>
+        npcText.text = "";
+        foreach (char c in line)
         {
-            button.transform.localScale = Vector3.one * 0.95f;
-        });
-        trigger.triggers.Add(entryEnter);
-
-        var entryExit = new EventTrigger.Entry { eventID = EventTriggerType.PointerExit };
-        entryExit.callback.AddListener((data) =>
-        {
-            button.transform.localScale = Vector3.one;
-        });
-        trigger.triggers.Add(entryExit);
+            npcText.text += c;
+            yield return new WaitForSeconds(0.03f);
+        }
     }
 
     private void HideChoiceButtons()
     {
         foreach (var button in choiceButtons)
-        {
             button.gameObject.SetActive(false);
-        }
-    }
-
-    private IEnumerator ShowChoicesAfterNpcSpeech(string npcSpeech)
-    {
-        yield return new WaitForSeconds(npcSpeech.Length * 0.1f);
-        ShowChoiceButtons();
     }
 
     private void ShowChoiceButtons()
@@ -166,36 +153,59 @@ public class DialogueManager : MonoBehaviour
         {
             if (i < currentDialogue.playerChoices.Length)
             {
-                choiceButtons[i].gameObject.SetActive(true);
-                choiceButtons[i].GetComponentInChildren<TextMeshProUGUI>().text = currentDialogue.playerChoices[i];
+                var button = choiceButtons[i];
+                button.gameObject.SetActive(true);
+                button.GetComponentInChildren<TextMeshProUGUI>().text = currentDialogue.playerChoices[i];
 
-                choiceButtons[i].GetComponent<UnityEngine.UI.Image>().sprite = buttonImageNormal;
+                var image = button.GetComponent<Image>();
+                image.sprite = buttonImageNormal;
 
-                int choiceIndex = i;
-                choiceButtons[i].onClick.RemoveAllListeners();
-                choiceButtons[i].onClick.AddListener(() => OnChoiceSelected(choiceIndex));
-
-                UnityEngine.UI.Button button = choiceButtons[i];
+                int index = i;
+                button.onClick.RemoveAllListeners();
+                button.onClick.AddListener(() => OnChoiceSelected(index));
                 button.onClick.AddListener(() => OnButtonClick(button));
+
+                AddHoverEffect(button);
             }
             else
             {
                 choiceButtons[i].gameObject.SetActive(false);
             }
         }
+
+        // START fallback
+        if (fallbackCoroutine != null) StopCoroutine(fallbackCoroutine);
+        fallbackCoroutine = StartCoroutine(FallbackAutoEndDialogue());
     }
 
-    private void OnButtonClick(UnityEngine.UI.Button button)
+    private void OnButtonClick(Button button)
     {
-        UnityEngine.UI.Image buttonImage = button.GetComponent<UnityEngine.UI.Image>();
-        if (buttonImage != null)
-        {
-            buttonImage.sprite = buttonImageHighlighted;
-        }
+        var image = button.GetComponent<Image>();
+        if (image != null)
+            image.sprite = buttonImageHighlighted;
+    }
+
+    private void AddHoverEffect(Button button)
+    {
+        var trigger = button.GetComponent<EventTrigger>() ?? button.gameObject.AddComponent<EventTrigger>();
+        trigger.triggers.Clear();
+
+        var entryEnter = new EventTrigger.Entry { eventID = EventTriggerType.PointerEnter };
+        entryEnter.callback.AddListener((_) => button.transform.localScale = Vector3.one * 0.95f);
+        trigger.triggers.Add(entryEnter);
+
+        var entryExit = new EventTrigger.Entry { eventID = EventTriggerType.PointerExit };
+        entryExit.callback.AddListener((_) => button.transform.localScale = Vector3.one);
+        trigger.triggers.Add(entryExit);
     }
 
     private void OnChoiceSelected(int choiceIndex)
     {
+        if (hasChosen) return;
+        hasChosen = true;
+
+        if (fallbackCoroutine != null) StopCoroutine(fallbackCoroutine);
+
         SetLastPlayerChoice(choiceIndex);
 
         string playerResponse = currentDialogue.playerExpandedResponses[choiceIndex];
@@ -227,15 +237,18 @@ public class DialogueManager : MonoBehaviour
         }
 
         yield return new WaitForSeconds(1f);
-
         EndDialogue();
     }
 
-    public void HideDialogue()
+    private IEnumerator FallbackAutoEndDialogue()
     {
-        dialoguePanel.SetActive(false);
+        yield return new WaitForSeconds(10f);
+        if (!hasChosen)
+        {
+            Debug.LogWarning("Auto zakoñczono dialog po czasie");
+            EndDialogue();
+        }
     }
-
     public DialogueData GetDialogueForRound(int round)
     {
         currentRound = round;
@@ -245,42 +258,38 @@ public class DialogueManager : MonoBehaviour
                 return new DialogueData
                 {
                     npcLine = "siema jestem triceps",
-                    playerChoices = new string[] { "halo", "nie teraz" },
-                    playerExpandedResponses = new string[]
-                    {
-                        "Tak naprawdê chcia³am tylko siê przywitaæ.",
-                        "Nie mam teraz czasu na rozmowê."
-                    },
-                    npcResponses = new string[]
-                    {
-                        "Mi³o Ciê poznaæ!",
-                        "No trudno, mo¿e innym razem."
-                    },
-                    endings = new int[] { 0, 1 },
+                    playerChoices = new[] { "halo", "nie teraz" },
+                    playerExpandedResponses = new[] {
+                    "Tak naprawdê chcia³am tylko siê przywitaæ.",
+                    "Nie mam teraz czasu na rozmowê."
+                },
+                    npcResponses = new[] {
+                    "Mi³o Ciê poznaæ!",
+                    "No trudno, mo¿e innym razem."
+                },
+                    endings = new[] { 0, 1 },
                     npcImage = npcImageRound0,
                     backgroundImage = backgroundImageRound0
                 };
-
 
             case 1:
                 return new DialogueData
                 {
                     npcLine = "siema nie jestem triceps",
-                    playerChoices = new string[] { "siema", "nie" },
-                    playerExpandedResponses = new string[]
-                    {
-                        "noooooooooooooooooo",
-                        "Nie mam teraz czasu na rozmowê."
-                    },
-                    npcResponses = new string[]
-                    {
-                        "Mi³o Ciê poznaæ!",
-                        "No trudno, mo¿e innym razem."
-                    },
-                    endings = new int[] { 0, 1 },
+                    playerChoices = new[] { "siema", "nie" },
+                    playerExpandedResponses = new[] {
+                    "noooooooooooooooooo",
+                    "Nie mam teraz czasu na rozmowê."
+                },
+                    npcResponses = new[] {
+                    "Mi³o Ciê poznaæ!",
+                    "No trudno, mo¿e innym razem."
+                },
+                    endings = new[] { 0, 1 },
                     npcImage = npcImageRound1,
                     backgroundImage = backgroundImageRound1
                 };
+
             default:
                 return null;
         }
@@ -290,10 +299,4 @@ public class DialogueManager : MonoBehaviour
     {
         OnDialogueEnd?.Invoke();
     }
-    private IEnumerator AutoEndDialogue()
-    {
-        yield return new WaitForSeconds(npcText.text.Length * 0.05f + 2f);
-        EndDialogue();
-    }
-
 }
