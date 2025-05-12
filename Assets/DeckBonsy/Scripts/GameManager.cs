@@ -81,7 +81,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        gameReady = true;
+        //gameReady = true;
         currentRound = 0;
         endGamePanel.SetActive(false);
         restartButton.onClick.AddListener(RestartGame);
@@ -226,10 +226,12 @@ public class GameManager : MonoBehaviour
         isCardBeingPlayed = false;
         isPlayerTurn = true;
         introShownThisRound = false;
+        startCardGameAfterIntro = false; 
 
         UpdateScore();
         ShowIntroDialogueForRound();
     }
+
 
     private void FinishGame(string result, int playerScore, int enemyScore, bool showDialogue)
     {
@@ -258,28 +260,46 @@ public class GameManager : MonoBehaviour
     }
 
     private void OnPostGameDialogueFinished()
+{
+    Debug.Log("🟠 OnPostGameDialogueFinished wywołane");
+    dialogueManager.OnDialogueEnd -= OnPostGameDialogueFinished;
+    dialoguePanel.SetActive(false);
+
+    int npcIndex = currentRound;
+    int playerChoice = dialogueManager.GetLastPlayerChoice();
+
+    Debug.Log($"🔍 NPC Index: {npcIndex}, Player Choice: {playerChoice}");
+
+    if (!journalOpenedThisDialogue && npcIndex >= 0 && playerChoice >= 0 && journalUpdateManager != null)
     {
-        dialogueManager.OnDialogueEnd -= OnPostGameDialogueFinished;
-        dialoguePanel.SetActive(false);
+        journalOpenedThisDialogue = true;
 
-        int npcIndex = currentRound;
-        int playerChoice = dialogueManager.GetLastPlayerChoice();
+        Debug.Log("📒 Wywołuję ShowNoteAfterDialogue...");
 
-        if (!journalOpenedThisDialogue && npcIndex >= 0 && playerChoice >= 0 && journalUpdateManager != null)
+        journalUpdateManager.ShowNoteAfterDialogue(npcIndex, playerChoice, () =>
         {
-            journalOpenedThisDialogue = true;
-            journalUpdateManager.ShowNoteAfterDialogue(npcIndex, playerChoice, OnJournalClosedAfterChoiceDialogue);
-        }
-        else
-        {
-            OnJournalClosedAfterChoiceDialogue();
-        }
-        DeckManager.deckManager.ResetDeck();
-        HandManager.handManager.ClearHand(); // tutaj tylko jak gracz jest aktywny?
-        HandManager.handManager.ClearAllHands();
-        playerBoard.ClearBoard();
-        enemyBoard.ClearBoard();
+            Debug.Log("✅ Callback z dziennika wywołany");
+            journalOpenedThisDialogue = false;
+            currentRound++;
+            Debug.Log($"📈 currentRound zwiększony do: {currentRound}");
+            StartCoroutine(DelayedNextRound(0.1f));
+        });
     }
+    else
+    {
+        Debug.Log("⚠️ Pomijam dziennik, przechodzę dalej");
+        currentRound++;
+        Debug.Log($"📈 currentRound zwiększony do: {currentRound}");
+        StartCoroutine(DelayedNextRound(0.1f));
+    }
+}
+
+    private IEnumerator DelayedNextRound(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        PrepareNextRound();
+    }
+
 
     private void OnJournalClosedAfterChoiceDialogue()
     {
@@ -287,6 +307,8 @@ public class GameManager : MonoBehaviour
         currentRound++;
         PrepareNextRound();
     }
+
+
 
     private void CheckForRoundEnd()
     {

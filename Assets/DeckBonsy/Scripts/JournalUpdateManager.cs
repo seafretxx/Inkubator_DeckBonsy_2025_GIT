@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System.Collections;
@@ -25,28 +25,31 @@ public class JournalUpdateManager : MonoBehaviour
     }
 
     public void ShowNoteAfterDialogue(int npcIndex, int playerChoice, Action onNoteComplete)
+{
+    Debug.Log($"ðŸŸ¡ ShowNoteAfterDialogue: npcIndex={npcIndex}, playerChoice={playerChoice}");
+
+    string note = GetChoiceText(npcIndex, playerChoice);
+    Debug.Log($"ðŸŸ¡ Note wygenerowany: {note}");
+
+    if (string.IsNullOrEmpty(note) || npcIndex < 0 || npcIndex >= pageSprites.Count)
     {
-        string note = GetChoiceText(npcIndex, playerChoice);
-
-        if (string.IsNullOrEmpty(note) || npcIndex < 0 || npcIndex >= pageSprites.Count)
-        {
-            Debug.LogWarning("B³êdny indeks NPC lub pusty tekst!");
-            onNoteComplete?.Invoke(); // dalej kontynuujemy
-            return;
-        }
-
-        JournalDataManager.Instance.AddOrUpdateNote(npcIndex, note);
-
-        journalClosedCallback = onNoteComplete; // <-- ZAPAMIÊTAJ CALLBACK
-
-        journalPanel.SetActive(true);
-        pageImage.sprite = pageSprites[npcIndex];
-
-        if (typingCoroutine != null)
-            StopCoroutine(typingCoroutine);
-
-        typingCoroutine = StartCoroutine(TypeNote(note));
+        Debug.LogWarning("âŒ BÅ‚Ä™dny indeks NPC lub pusty tekst!");
+        onNoteComplete?.Invoke(); 
+        return;
     }
+
+    Debug.Log("âœ… Warunki OK, pokazujÄ™ dziennik!");
+
+    journalClosedCallback = onNoteComplete;
+    journalPanel.SetActive(true);
+    pageImage.sprite = pageSprites[npcIndex];
+
+    if (typingCoroutine != null)
+        StopCoroutine(typingCoroutine);
+
+    typingCoroutine = StartCoroutine(TypeNote(note));
+}
+
 
     private IEnumerator TypeNote(string note)
     {
@@ -66,10 +69,11 @@ public class JournalUpdateManager : MonoBehaviour
         if (journalClosedCallback != null)
         {
             var callback = journalClosedCallback;
-            journalClosedCallback = null; 
-            callback.Invoke();
+            journalClosedCallback = null;
+            callback.Invoke(); 
         }
     }
+
     public void OnJournalClosedByPlayer()
     {
         if (journalClosedCallback != null)
@@ -85,18 +89,18 @@ public class JournalUpdateManager : MonoBehaviour
         if (npcIndex == 0)
         {
             if (playerChoice == 0)
-                return "Gracz powiedzia³: 'Halo!'.\nNPC odpowiedzia³: 'Czeœæ! Mi³o Ciê widzieæ.'";
+                return "Gracz powiedziaÅ‚: 'Halo!'.\nNPC odpowiedziaÅ‚: 'CzeÅ›Ä‡! MiÅ‚o CiÄ™ widzieÄ‡.'";
             else
-                return "Gracz powiedzia³: 'Nie teraz'.\nNPC odpowiedzia³: 'Rozumiem. Mo¿e póŸniej?'.";
+                return "Gracz powiedziaÅ‚: 'Nie teraz'.\nNPC odpowiedziaÅ‚: 'Rozumiem. MoÅ¼e pÃ³Åºniej?'.";
         }
         else if (npcIndex == 1)
         {
             if (playerChoice == 0)
-                return "Gracz powiedzia³: 'Siema!'.\nNPC odpowiedzia³: 'Yo, stary znajomy!'.";
+                return "Gracz powiedziaÅ‚: 'Siema!'.\nNPC odpowiedziaÅ‚: 'Yo, stary znajomy!'.";
             else
-                return "Gracz powiedzia³: 'Nie dzisiaj'.\nNPC odpowiedzia³: 'Szkoda...'.";
+                return "Gracz powiedziaÅ‚: 'Nie dzisiaj'.\nNPC odpowiedziaÅ‚: 'Szkoda...'.";
         }
 
-        return $"Gracz wybra³ opcjê {playerChoice + 1} z NPC {npcIndex}.";
+        return $"Gracz wybraÅ‚ opcjÄ™ {playerChoice + 1} z NPC {npcIndex}.";
     }
 }
