@@ -90,7 +90,7 @@ public class CardContainer : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (isPlayerCard)
-           HandManager.handManager.HideCardDescription();
+        HandManager.handManager.HideCardDescription();
     }
+
 }
