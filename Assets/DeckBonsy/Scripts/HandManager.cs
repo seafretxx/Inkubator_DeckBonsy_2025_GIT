@@ -135,5 +135,11 @@ public class HandManager : MonoBehaviour
             enemyHand.ClearHand();
         }
     }
+    public void ClearAllHands()
+    {
+        playerHand.ClearHand();
+        enemyHand.ClearHand();
+    }
+
 
 }
