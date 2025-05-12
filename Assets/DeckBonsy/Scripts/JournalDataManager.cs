@@ -48,7 +48,7 @@ public class JournalDataManager : MonoBehaviour
 
 
 
-    private void SaveJournalData()
+    public void SaveJournalData()
     {
         foreach (var entry in dynamicTexts)
         {

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
@@ -19,7 +19,10 @@ public class JournalDisplayManager : MonoBehaviour
     private void Start()
     {
         //journalPanel.SetActive(false); //na chuj ja to dawalam?
-
+        if (!journalPanel.activeSelf)
+        {
+            journalPanel.SetActive(false);
+        }
         if (nextPageButton) nextPageButton.onClick.AddListener(NextPage);
         if (previousPageButton) previousPageButton.onClick.AddListener(PreviousPage);
         if (closeButton) closeButton.onClick.AddListener(CloseJournal);
@@ -29,7 +32,7 @@ public class JournalDisplayManager : MonoBehaviour
     {
         if (pageIndex < 0 || pageIndex >= pageSprites.Count)
         {
-            Debug.LogWarning("Nieprawid�owy indeks strony: " + pageIndex);
+            Debug.LogWarning("Nieprawidłowy indeks strony: " + pageIndex);
             return;
         }
 
@@ -45,7 +48,7 @@ public class JournalDisplayManager : MonoBehaviour
         var manager = JournalUpdateManager.Instance;
         if (manager != null)
         {
-            manager.OnJournalClosedByPlayer(); // wywo�uje callback z GameManagera
+            manager.OnJournalClosedByPlayer(); // wywołuje callback z GameManagera
         }
     }
 
@@ -73,10 +76,10 @@ public class JournalDisplayManager : MonoBehaviour
         if (currentPage >= 0 && currentPage < pageSprites.Count)
         {
             pageImage.sprite = pageSprites[currentPage];
-
             string text = JournalDataManager.Instance.GetTextForPage(currentPage);
-
+            Debug.Log($"📖 DisplayManager: Loaded text for page {currentPage}: {text}");
             pageText.text = string.IsNullOrWhiteSpace(text) ? "<i>Brak zapisu dla tej strony</i>" : text;
         }
     }
+
 }
