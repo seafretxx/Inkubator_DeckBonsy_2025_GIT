@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using UnityEngine;
 using TMPro;
 
@@ -120,6 +122,28 @@ public class DialogueManager : MonoBehaviour
             StartCoroutine(ShowChoicesAfterNpcSpeech(dialogue.npcLine));
         }
 
+    }
+    private void AddHoverEffect(Button button)
+    {
+        EventTrigger trigger = button.GetComponent<EventTrigger>();
+        if (trigger == null)
+            trigger = button.gameObject.AddComponent<EventTrigger>();
+
+        trigger.triggers.Clear();
+
+        var entryEnter = new EventTrigger.Entry { eventID = EventTriggerType.PointerEnter };
+        entryEnter.callback.AddListener((data) =>
+        {
+            button.transform.localScale = Vector3.one * 0.95f;
+        });
+        trigger.triggers.Add(entryEnter);
+
+        var entryExit = new EventTrigger.Entry { eventID = EventTriggerType.PointerExit };
+        entryExit.callback.AddListener((data) =>
+        {
+            button.transform.localScale = Vector3.one;
+        });
+        trigger.triggers.Add(entryExit);
     }
 
     private void HideChoiceButtons()

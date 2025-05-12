@@ -81,13 +81,12 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        gameReady = true;
         currentRound = 0;
         endGamePanel.SetActive(false);
         restartButton.onClick.AddListener(RestartGame);
 
         scoreToWin = 5;
-        journalOpenedThisDialogue = false;
-        introShownThisRound = false;
         isCardBeingPlayed = false;
         chosenCard = false;
         chosenColumn = false;
@@ -135,18 +134,19 @@ public class GameManager : MonoBehaviour
 
     private void StartCardGameForNewRound()
     {
-        gameReady = true;
-
         DeckManager.deckManager.ResetDeck();
         HandManager.handManager.ClearHand();
         playerBoard.ClearBoard();
         enemyBoard.ClearBoard();
-        UpdateScore();
 
-        isPlayerTurn = true;
         chosenCard = false;
         chosenColumn = false;
+        isCardBeingPlayed = false;
+        isPlayerTurn = true;
         introShownThisRound = true;
+        gameReady = true;
+
+        UpdateScore();
     }
 
     private void Update()
@@ -214,6 +214,23 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void PrepareNextRound()
+    {
+        DeckManager.deckManager.ResetDeck();
+        HandManager.handManager.ClearHand();
+        playerBoard.ClearBoard();
+        enemyBoard.ClearBoard();
+
+        chosenCard = false;
+        chosenColumn = false;
+        isCardBeingPlayed = false;
+        isPlayerTurn = true;
+        introShownThisRound = false;
+
+        UpdateScore();
+        ShowIntroDialogueForRound();
+    }
+
     private void FinishGame(string result, int playerScore, int enemyScore, bool showDialogue)
     {
         gameReady = false;
@@ -257,15 +274,18 @@ public class GameManager : MonoBehaviour
         {
             OnJournalClosedAfterChoiceDialogue();
         }
+        DeckManager.deckManager.ResetDeck();
+        HandManager.handManager.ClearHand(); // tutaj tylko jak gracz jest aktywny?
+        HandManager.handManager.ClearAllHands();
+        playerBoard.ClearBoard();
+        enemyBoard.ClearBoard();
     }
 
     private void OnJournalClosedAfterChoiceDialogue()
     {
         journalOpenedThisDialogue = false;
         currentRound++;
-        introShownThisRound = false;
-
-        ShowIntroDialogueForRound();
+        PrepareNextRound();
     }
 
     private void CheckForRoundEnd()
@@ -378,21 +398,14 @@ public class GameManager : MonoBehaviour
 
     private void RestartGame()
     {
-        endGamePanel.SetActive(false);
-        gameReady = true;
-        isPlayerTurn = true;
-        chosenCard = false;
-        chosenColumn = false;
+        PlayerPrefs.DeleteKey("JournalClearedOnce");
+        ClearAllJournalDataOnce();
 
-        DeckManager.deckManager.ResetDeck();
-        HandManager.handManager.ClearHand();
-        playerBoard.ClearBoard();
-        enemyBoard.ClearBoard();
-
-        UpdateScore();
-
+        currentRound = 0;
         introShownThisRound = false;
-        ShowIntroDialogueForRound();
+        journalOpenedThisDialogue = false;
+
+        PrepareNextRound();
     }
 
     private void OpenJournal()
@@ -418,7 +431,6 @@ public class GameManager : MonoBehaviour
 
         PlayerPrefs.SetInt("JournalClearedOnce", 1);
         PlayerPrefs.Save();
-
-        Debug.Log("Dziennik wyczyszczony jednorazowo przy starcie.");
+        Debug.Log("Dziennik wyczyszczony przy starcie gry.");
     }
 }
