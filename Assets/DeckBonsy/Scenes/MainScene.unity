@@ -324,7 +324,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -6, y: 247.53119}
-  m_SizeDelta: {x: 570, y: 453.9377}
+  m_SizeDelta: {x: 570, y: 450}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &55287673
 MonoBehaviour:
@@ -743,7 +743,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -6, y: -253.94373}
-  m_SizeDelta: {x: 570, y: 450.3253}
+  m_SizeDelta: {x: 570, y: 450}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &301343699
 MonoBehaviour:
@@ -2379,8 +2379,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 32164ee4a701b8a4985c5bb7af26e33d, type: 2}
-  m_sharedMaterial: {fileID: -8168214444860464881, guid: 32164ee4a701b8a4985c5bb7af26e33d, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: b1721dedc5d48ce4e837be680e6f0fed, type: 2}
+  m_sharedMaterial: {fileID: 4201655790394336326, guid: b1721dedc5d48ce4e837be680e6f0fed, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -5678,7 +5678,7 @@ MonoBehaviour:
   m_ChildAlignment: 6
   m_StartCorner: 2
   m_StartAxis: 1
-  m_CellSize: {x: 180, y: 180}
+  m_CellSize: {x: 140, y: 140}
   m_Spacing: {x: 0, y: 0}
   m_Constraint: 1
   m_ConstraintCount: 3

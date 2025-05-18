@@ -107,7 +107,7 @@ public class GameManager : MonoBehaviour
         endGamePanel.SetActive(false);
         restartButton.onClick.AddListener(RestartGame);
 
-        scoreToWin = 5;
+        scoreToWin = 55;
         isCardBeingPlayed = false;
         chosenCard = false;
         chosenColumn = false;
