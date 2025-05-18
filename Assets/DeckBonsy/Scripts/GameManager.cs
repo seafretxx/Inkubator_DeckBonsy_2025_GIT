@@ -107,7 +107,7 @@ public class GameManager : MonoBehaviour
         endGamePanel.SetActive(false);
         restartButton.onClick.AddListener(RestartGame);
 
-        scoreToWin = 55;
+        scoreToWin = 3;
         isCardBeingPlayed = false;
         chosenCard = false;
         chosenColumn = false;
@@ -404,7 +404,7 @@ public class GameManager : MonoBehaviour
         UpdateBackground();
         DeckManager.deckManager.UpdateDrawButtons(isPlayerTurn);
         UpdateScore();
-        foreach (var card in FindObjectsOfType<CardContainer>())
+        foreach (var card in FindObjectsByType<CardContainer>(FindObjectsSortMode.None))
         {
             card.UpdateInteractivityVisual();
         }

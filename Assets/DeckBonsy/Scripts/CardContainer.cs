@@ -181,7 +181,7 @@ public class CardContainer : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     public static void DeselectAllCards()
     {
-        foreach (var card in FindObjectsOfType<CardContainer>())
+        foreach (var card in FindObjectsByType<CardContainer>(FindObjectsSortMode.None))
         {
             card.DeselectCard();
         }
