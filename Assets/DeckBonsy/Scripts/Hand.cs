@@ -41,8 +41,11 @@ public class Hand : MonoBehaviour
         container.SetHandIndex(cardObjects.Count - 1);
         container.UpdateCardVisuals();
 
+        currentHandSize++;
+
         RearrangeHand();
     }
+
 
 
     public void RemoveCardFromHand(int index)

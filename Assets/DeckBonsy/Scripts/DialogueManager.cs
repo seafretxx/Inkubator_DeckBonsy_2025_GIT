@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
 using DG.Tweening;
+using UnityEngine.SceneManagement;
 
 
 public class DialogueManager : MonoBehaviour
@@ -267,7 +268,7 @@ public class DialogueManager : MonoBehaviour
                 button.GetComponentInChildren<TextMeshProUGUI>().text = currentDialogue.playerChoices[i];
 
                 var image = button.GetComponent<Image>();
-                image.sprite = buttonImageNormal;
+               // image.sprite = buttonImageNormal;
 
                 int index = i;
                 button.onClick.RemoveAllListeners();
@@ -330,6 +331,7 @@ public class DialogueManager : MonoBehaviour
         if (fallbackCoroutine != null) StopCoroutine(fallbackCoroutine);
 
         SetLastPlayerChoice(choiceIndex);
+        GameManager.gameManager.RegisterPlayerChoice(choiceIndex, currentDialogue);
         HideChoiceButtons(); 
 
         string playerResponse = currentDialogue.playerExpandedResponses[choiceIndex];
@@ -483,6 +485,10 @@ public class DialogueManager : MonoBehaviour
 
     public void EndDialogue()
     {
-        OnDialogueEnd?.Invoke();
+       
+        {
+            OnDialogueEnd?.Invoke();
+        }
+
     }
 }
