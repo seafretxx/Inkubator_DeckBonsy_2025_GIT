@@ -377,7 +377,7 @@ public class GameManager : MonoBehaviour
                 {
                     string result = CalculateEnding();
                     PlayerPrefs.SetString("ending", result);
-                    SceneManager.LoadScene("EndingScene");
+                    SceneManager.LoadScene("EndScene");
                 }
                 else
                 {
@@ -392,7 +392,7 @@ public class GameManager : MonoBehaviour
             {
                 string result = CalculateEnding();
                 PlayerPrefs.SetString("ending", result);
-                SceneManager.LoadScene("EndingScene");
+                SceneManager.LoadScene("EndScene");
             }
             else
             {
@@ -478,7 +478,7 @@ public class GameManager : MonoBehaviour
 
     private bool DoesEffectIdRequireInput(int effectId)
     {
-        return effectId == 5 || effectId == 8;
+        return false;// effectId == 5 || effectId == 8;
     }
 
     public bool GetPlayerTurn() => isPlayerTurn;

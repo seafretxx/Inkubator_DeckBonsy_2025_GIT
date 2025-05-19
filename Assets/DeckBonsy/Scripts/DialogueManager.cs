@@ -268,7 +268,7 @@ public class DialogueManager : MonoBehaviour
                 button.GetComponentInChildren<TextMeshProUGUI>().text = currentDialogue.playerChoices[i];
 
                 var image = button.GetComponent<Image>();
-               // image.sprite = buttonImageNormal;
+               //image.sprite = buttonImageNormal;
 
                 int index = i;
                 button.onClick.RemoveAllListeners();
@@ -291,8 +291,8 @@ public class DialogueManager : MonoBehaviour
     private void OnButtonClick(Button button)
     {
         var image = button.GetComponent<Image>();
-        if (image != null)
-            image.sprite = buttonImageHighlighted;
+        if (image != null) ;
+            //image.sprite = buttonImageHighlighted;
     }
 
     public void OnContinueClicked()
