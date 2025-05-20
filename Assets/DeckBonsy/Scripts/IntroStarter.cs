@@ -33,7 +33,7 @@ public class IntroStarter : MonoBehaviour
 
         if (dialogueManager == null || gameManager == null)
         {
-            Debug.LogError("❌ DialogueManager lub GameManager nie przypisany!");
+            Debug.LogError("DialogueManager lub GameManager nie przypisany!");
             yield break;
         }
 

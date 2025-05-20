@@ -55,6 +55,11 @@ public class Hand : MonoBehaviour
         Destroy(cardObjects[index]);
         cardObjects[index] = null;
         cardObjects.RemoveAt(index);
+        int i = 0;
+        foreach(GameObject cardObject in cardObjects)
+        {
+            cardObject.GetComponent<CardContainer>().SetHandIndex(i++);
+        }
         currentHandSize--;
         RearrangeHand();
     }

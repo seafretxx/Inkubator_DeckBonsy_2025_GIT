@@ -134,7 +134,8 @@ public class GameManager : MonoBehaviour
             PlayerPrefs.SetInt("GameStartedOnce", 1);
         }
 
-
+        DeckManager.deckManager.UpdateDrawButtons(true);
+        UpdateDrawTexts(true);
         // ShowIntroDialogueForRound();
     }
 
@@ -235,13 +236,6 @@ public class GameManager : MonoBehaviour
             isCardBeingPlayed = true;
 
             int handSize = HandManager.handManager.GetHandSize(isPlayerTurn);
-            if (chosenCardIndex >= handSize)
-            {
-                Debug.LogWarning($"Nieprawidłowy index karty: {chosenCardIndex}. Przerywam dodawanie.");
-                ResetChoices();
-                isCardBeingPlayed = false;
-                return;
-            }
 
             GameObject cardObj = HandManager.handManager.GetCardObjectByIndex(chosenCardIndex);
             if (cardObj == null)
@@ -307,6 +301,8 @@ public class GameManager : MonoBehaviour
 
     private void PrepareNextRound()
     {
+        DeckManager.deckManager.UpdateDrawButtons(true);
+        UpdateDrawTexts(true);
         DeckManager.deckManager.ResetDeck();
         DeckManager.deckManager.ShuffleDeck();
         HandManager.handManager.ClearHand();
@@ -464,6 +460,11 @@ public class GameManager : MonoBehaviour
         playerDrawText.SetActive(isPlayerTurn);
         enemyDrawText.SetActive(!isPlayerTurn);
     }
+    private void UpdateDrawTexts(bool _isPlayerTurn)
+    {
+        playerDrawText.SetActive(_isPlayerTurn);
+        enemyDrawText.SetActive(!_isPlayerTurn);
+    }
 
     private void UpdateBackground()
     {
@@ -498,11 +499,6 @@ public class GameManager : MonoBehaviour
         if (isPlayerTurn != _isPlayerCard) return;
 
         int handSize = HandManager.handManager.GetHandSize(isPlayerTurn);
-        if (_chosenCardIndex >= handSize)
-        {
-            Debug.LogWarning($"Próba ustawienia nieprawidłowego indeksu: {_chosenCardIndex}, rozmiar ręki: {handSize}");
-            return;
-        }
 
         chosenCard = true;
         chosenCardIndex = _chosenCardIndex;
@@ -543,6 +539,8 @@ public class GameManager : MonoBehaviour
 
     private void PrepareCurrentRound()
     {
+        DeckManager.deckManager.UpdateDrawButtons(true);
+        UpdateDrawTexts(true);
         playerBoard.ClearBoard(); 
         enemyBoard.ClearBoard();
 
@@ -627,5 +625,16 @@ public class GameManager : MonoBehaviour
         return !gameReady && introShownThisRound; // czyli po walce, nie przed
     }
 
+    private Dictionary<string, string> npcEndingTexts = new();
+
+    public void SaveNpcEndingText(string npcId, string text)
+    {
+        npcEndingTexts[npcId] = text;
+    }
+
+    public string GetNpcEndingText(string npcId)
+    {
+        return npcEndingTexts.TryGetValue(npcId, out var text) ? text : "Brak danych o zakończeniu.";
+    }
 
 }

@@ -148,6 +148,8 @@ public class DialogueManager : MonoBehaviour
         hasChosen = false;
         ShowDialoguePanel();
         currentDialogue = dialogue;
+        currentRound = GameManager.gameManager.GetCurrentRound();
+
 
         if (dialogue == null)
         {
@@ -336,6 +338,20 @@ public class DialogueManager : MonoBehaviour
 
         string playerResponse = currentDialogue.playerExpandedResponses[choiceIndex];
         string npcResponse = currentDialogue.npcResponses[choiceIndex];
+        if (currentDialogue.npcEndingDescriptions != null &&
+    choiceIndex < currentDialogue.npcEndingDescriptions.Length)
+        {
+            string npcId = currentRound switch
+            {
+                0 => "triceps",
+                1 => "flint",
+                2 => "fabius",
+                3 => "minerva",
+            };
+
+            string endingText = currentDialogue.npcEndingDescriptions[choiceIndex];
+            GameManager.gameManager.SaveNpcEndingText(npcId, endingText);
+        }
 
         StartCoroutine(PlayChoiceSequence(playerResponse, npcResponse));
     }
@@ -418,6 +434,8 @@ public class DialogueManager : MonoBehaviour
                     "*gdy dociera do niego twój krzyk, okazuje niepewność* Wybacz szefowo… *przechodzi gwałtownie z krzyku w szept*. Oczywiście, że chcę walczyć w pierwszym rzędzie. Po prostu… bardzo jestem zdenerwowany, wkurzony i te inne… Przepraszam za bycie mało dyskretnym. Zajmę się przygotowaniami i ojej… pożałują wszystkiego co nam zrobili. ",
                     "Nie robić hałasu?! Nie można się bać tych skurczybyków! Trzeba im pokazać gdzie ich miejsce! Elity Rzymu upadną! I co najważniejsze: IMPERATOR MA HALUKSA!! *po krótkiej chwili widzisz, że w waszą stronę idzie patrol rzymskich strażników. Wiedząc co się świeci porzucasz rozmowę z Tricepsem i uciekasz ukradkiem*"
                 },
+                    npcEndingDescriptions = new[] { "Flint rozczarowany wycofał się z walki.", "Flint przekazał plan — jego wynalazek zyskał nową nazwę: Iskra." },
+
                     endings = new[] { 0, 1 },
                     npcImage = npcImageRound0,
                     backgroundImage = backgroundImageRound0
@@ -436,6 +454,8 @@ public class DialogueManager : MonoBehaviour
                     "Cóż… trochę spodziewałem się, że możesz być jak twój poprzednik. Niedaleko pada jabłko od jabłoni, jak to mawiają. Jedyne co mogę powiedzieć - twoja strata. A raczej nasza. No ale co mogę zrobić. Widocznie nie sprzedałem swojego wynalazku wystarczająco dobrze. Ale jak możesz się spodziewać, mimo twojego braku zgody na jego użycie, oferuję swoją pomoc. ",
                     "Ha ha! Wiedziałem, że jesteś inna. Wyczułem to od razu. Zapewniam cię, że wygramy tą walkę, a mój gadżet się do tego przyczyni. Może nawet będę sławny. Rzymianie zapamiętają mnie jako ich największy koszmar. Jeśli któryś z nich wyjdzie z tego wszystkiego cało."
                 },
+                   npcEndingDescriptions = new[] {"Flint rozczarowany wycofał się z walki.", "Z pomocą Flinta, który po raz pierwszy poczuł, że jego wynalazki naprawdę mogą zadecydować o losach wojny, udało się podpalić magazyny broni, a ogień szybko rozprzestrzenił się na dalsze obszary fabryk. Dźwięk wybuchów i ogień zamieniły miasto w chaos, a strażnicy, choć przewyższali liczebnie, nie byli przygotowani na tak szybki atak. Ruch oporu zyskał na sile, a zdesperowani żołnierze wycofali się na moment, by spróbować ocalić swoje życie." },
+
                     endings = new[] { 0, 1 },
                     npcImage = npcImageRound1,
                     backgroundImage = backgroundImageRound1
@@ -454,6 +474,8 @@ public class DialogueManager : MonoBehaviour
                     "Oh… czyli to postanowione, historia znów zatacza koło… (jego oczy wydają się puste, jakby powróciły do niego wszystkie dawne wspomnienia). (Fabius wstaje od stołu i przygląda się tobie). Wybacz, ale w takim wypadku nasze drogi muszą się tutaj rozejść. Życzę wam powodzenia, naprawdę. Ale nawet jeśli wszystko uda się wam na drodze agresji, to musisz wiedzieć, że takie wydarzenia zmieniają każdego. Niech Bogowie mają pod opieką wasze dusze… ",
                     "Tak! Na bogów, wiem dokładnie co robić! Audiencja. To jest to. Na szczęście masz do czynienia z byłym cenionym strażnikiem. Myślę, że uda mi się taką zorganizować. Zobaczysz, cywile też będą po naszej stronie. Przekonamy ich, no oczywiście nie wszystkich, ale to zawsze coś. "
                 },
+                    npcEndingDescriptions = new[] { "Flint rozczarowany wycofał się z walki.", "Flint przekazał plan — jego wynalazek zyskał nową nazwę: Iskra." },
+
                     endings = new[] { 0, 1 },
                     npcImage = npcImageRound2,
                     backgroundImage = backgroundImageRound2
@@ -472,6 +494,8 @@ public class DialogueManager : MonoBehaviour
                     "Oh, jakże dobroduszny gest. I to dopiero rozmowa ze mną sprawiła, że obudziło się wasze sumienie? Cóż… chyba będę musiała przyjąć taką ofertę, chociaż nie ukrywam, że liczyłam na coś zgoła innego. No ale… nie można mieć wszystkiego, tak? W takim razie pozwól, że na tym zakończymy. Może jeszcze zobaczymy się w niedalekiej przyszłości, chociaż mam ku temu spore wątpliwości. ",
                     "Hm… nieczyste zagranie.(uśmiecha się pod nosem) Ale cóż innego mi pozostało… Przynajmniej będę mogła zająć się w końcu problemami swoich ludzi. Zatem… powodzenia. Może jeśli wygracie bogowie jakimś cudem oczyszczą twoje sumienie. "
                 },
+                    npcEndingDescriptions = new[] { "Flint rozczarowany wycofał się z walki.", "Flint przekazał plan — jego wynalazek zyskał nową nazwę: Iskra." },
+
                     endings = new[] { 0, 1 },
                     npcImage = npcImageRound3,
                     backgroundImage = backgroundImageRound3
