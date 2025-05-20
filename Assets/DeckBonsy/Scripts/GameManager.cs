@@ -78,6 +78,7 @@ public class GameManager : MonoBehaviour
         else
         {
             gameManager = this;
+            DontDestroyOnLoad(gameObject); //dodane dla sceny endinggame
         }
 
         if (journalUpdateManager == null)

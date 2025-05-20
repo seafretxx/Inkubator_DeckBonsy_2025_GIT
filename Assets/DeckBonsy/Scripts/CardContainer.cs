@@ -186,7 +186,11 @@ public class CardContainer : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
             card.DeselectCard();
         }
     }
-
+     
+    public int GetHandIndex()
+    {
+        return handIndex;
+    }
     public void UpdateInteractivityVisual()
     {
         bool isMyTurn = GameManager.gameManager.GetPlayerTurn() == isPlayerCard;

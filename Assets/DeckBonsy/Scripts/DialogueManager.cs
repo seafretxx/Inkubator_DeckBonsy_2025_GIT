@@ -293,7 +293,7 @@ public class DialogueManager : MonoBehaviour
     private void OnButtonClick(Button button)
     {
         var image = button.GetComponent<Image>();
-        if (image != null) ;
+        //if (image != null) ;
             //image.sprite = buttonImageHighlighted;
     }
 
@@ -347,6 +347,7 @@ public class DialogueManager : MonoBehaviour
                 1 => "flint",
                 2 => "fabius",
                 3 => "minerva",
+                _ => "unknown" //to sie nie powinno wydarzyc
             };
 
             string endingText = currentDialogue.npcEndingDescriptions[choiceIndex];
@@ -360,27 +361,14 @@ public class DialogueManager : MonoBehaviour
     private IEnumerator PlayChoiceSequence(string playerLine, string npcLine)
     {
         npcText.text = "";
-        npcText.color = Color.cyan;
+        npcText.color = Color.cyan; 
 
-        foreach (char c in playerLine)
-        {
-            npcText.text += c;
-            yield return new WaitForSeconds(0.03f);
-        }
-
-        yield return new WaitForSeconds(1f);
-
-        npcText.text = "";
-        npcText.color = Color.white;
-
-        List<string> sentences = SplitIntoSentences(npcLine);
-
-        for (int i = 0; i < sentences.Count; i++)
+        List<string> playerSentences = SplitIntoSentences(playerLine);
+        foreach (string sentence in playerSentences)
         {
             npcText.text = "";
-            continueIndicator.gameObject.SetActive(false);
 
-            foreach (char c in sentences[i])
+            foreach (char c in sentence)
             {
                 npcText.text += c;
                 yield return new WaitForSeconds(0.03f);
@@ -399,8 +387,35 @@ public class DialogueManager : MonoBehaviour
         }
 
         yield return new WaitForSeconds(0.5f);
-        OnDialogueEnd?.Invoke(); 
 
+        npcText.text = "";
+        npcText.color = new Color32(255, 221, 153, 255); // hex: #FFDD99
+
+        List<string> npcSentences = SplitIntoSentences(npcLine);
+        foreach (string sentence in npcSentences)
+        {
+            npcText.text = "";
+
+            foreach (char c in sentence)
+            {
+                npcText.text += c;
+                yield return new WaitForSeconds(0.03f);
+            }
+
+            continueIndicator.gameObject.SetActive(true);
+            waitingForClick = true;
+            blinkTimer = 0f;
+            blinkDark = false;
+
+            yield return new WaitUntil(() => hasClickedContinue);
+
+            hasClickedContinue = false;
+            waitingForClick = false;
+            continueIndicator.gameObject.SetActive(false);
+        }
+
+        yield return new WaitForSeconds(0.5f);
+        OnDialogueEnd?.Invoke();
     }
 
 
@@ -434,7 +449,7 @@ public class DialogueManager : MonoBehaviour
                     "*gdy dociera do niego twój krzyk, okazuje niepewność* Wybacz szefowo… *przechodzi gwałtownie z krzyku w szept*. Oczywiście, że chcę walczyć w pierwszym rzędzie. Po prostu… bardzo jestem zdenerwowany, wkurzony i te inne… Przepraszam za bycie mało dyskretnym. Zajmę się przygotowaniami i ojej… pożałują wszystkiego co nam zrobili. ",
                     "Nie robić hałasu?! Nie można się bać tych skurczybyków! Trzeba im pokazać gdzie ich miejsce! Elity Rzymu upadną! I co najważniejsze: IMPERATOR MA HALUKSA!! *po krótkiej chwili widzisz, że w waszą stronę idzie patrol rzymskich strażników. Wiedząc co się świeci porzucasz rozmowę z Tricepsem i uciekasz ukradkiem*"
                 },
-                    npcEndingDescriptions = new[] { "Flint rozczarowany wycofał się z walki.", "Flint przekazał plan — jego wynalazek zyskał nową nazwę: Iskra." },
+                    npcEndingDescriptions = new[] { "Zwołał wiele niewolników, większość z nich przyszła tylko by stanąć u jego boku. Walczy dzielnie w bitwie. Stoi na czele powstańców, mianując się liderem walczących. Jest nieokrzesany, wściekły i zdeterminowany by wygrać. Ginie w powstaniu szybko, a jego śmierć jeszcze bardziej rozwściecza niewolników. Zapamiętany zostanie jako bohater, jako symbol walki.", "Władze dopadają go za krzyki o Imperatorze jeszcze przed powstaniem. Próbował się bronić, ale został stracony na oczach ulicznych przechodzeń.  Po zabiciu przedstawiono go przez władze jako przykład “dzikiego buntownika, a ta narracja jedynie wzmocniła strach i nienawiść w cywilach. U niewolników z kolei stał się symbolem walki i niesprawiedliwości, a jego śmierć była zapalnikiem powstania." },
 
                     endings = new[] { 0, 1 },
                     npcImage = npcImageRound0,
@@ -454,7 +469,7 @@ public class DialogueManager : MonoBehaviour
                     "Cóż… trochę spodziewałem się, że możesz być jak twój poprzednik. Niedaleko pada jabłko od jabłoni, jak to mawiają. Jedyne co mogę powiedzieć - twoja strata. A raczej nasza. No ale co mogę zrobić. Widocznie nie sprzedałem swojego wynalazku wystarczająco dobrze. Ale jak możesz się spodziewać, mimo twojego braku zgody na jego użycie, oferuję swoją pomoc. ",
                     "Ha ha! Wiedziałem, że jesteś inna. Wyczułem to od razu. Zapewniam cię, że wygramy tą walkę, a mój gadżet się do tego przyczyni. Może nawet będę sławny. Rzymianie zapamiętają mnie jako ich największy koszmar. Jeśli któryś z nich wyjdzie z tego wszystkiego cało."
                 },
-                   npcEndingDescriptions = new[] {"Flint rozczarowany wycofał się z walki.", "Z pomocą Flinta, który po raz pierwszy poczuł, że jego wynalazki naprawdę mogą zadecydować o losach wojny, udało się podpalić magazyny broni, a ogień szybko rozprzestrzenił się na dalsze obszary fabryk. Dźwięk wybuchów i ogień zamieniły miasto w chaos, a strażnicy, choć przewyższali liczebnie, nie byli przygotowani na tak szybki atak. Ruch oporu zyskał na sile, a zdesperowani żołnierze wycofali się na moment, by spróbować ocalić swoje życie." },
+                   npcEndingDescriptions = new[] {"Mimo że miał w rękach narzędzia do zmiany losów tego konfliktu, bez wiary w siebie postanowił nie ryzykować i nie używać swoich wynalazków w decydującym momencie. Wyrzuty sumienia, że mógł coś zmienić, doprowadzają go do obsesyjnego tworzenia broni. W końcu zostaje schwytany i powieszony za konspirację.", "Używa swojej broni. Nie jest najstabilniejsza i doprowadza do brutalności. Przeżywa bitwę, jednak wpada w depresję i wyrzuty sumienia - choć zyskał szacunek za swoje wynalazki, nie potrafił unikać ogromnej odpowiedzialności za śmierć tylu niewinnych.Nie tworzy już broni, popada w letarg, a jego umysł jest naznaczony piętnem winy. Ostatecznie popełnia samobójstwo." },
 
                     endings = new[] { 0, 1 },
                     npcImage = npcImageRound1,
@@ -474,7 +489,7 @@ public class DialogueManager : MonoBehaviour
                     "Oh… czyli to postanowione, historia znów zatacza koło… (jego oczy wydają się puste, jakby powróciły do niego wszystkie dawne wspomnienia). (Fabius wstaje od stołu i przygląda się tobie). Wybacz, ale w takim wypadku nasze drogi muszą się tutaj rozejść. Życzę wam powodzenia, naprawdę. Ale nawet jeśli wszystko uda się wam na drodze agresji, to musisz wiedzieć, że takie wydarzenia zmieniają każdego. Niech Bogowie mają pod opieką wasze dusze… ",
                     "Tak! Na bogów, wiem dokładnie co robić! Audiencja. To jest to. Na szczęście masz do czynienia z byłym cenionym strażnikiem. Myślę, że uda mi się taką zorganizować. Zobaczysz, cywile też będą po naszej stronie. Przekonamy ich, no oczywiście nie wszystkich, ale to zawsze coś. "
                 },
-                    npcEndingDescriptions = new[] { "Flint rozczarowany wycofał się z walki.", "Flint przekazał plan — jego wynalazek zyskał nową nazwę: Iskra." },
+                    npcEndingDescriptions = new[] { "Nie bierze udziału w powstaniu. Bezczynnie przygląda mu się z daleka, nie mogąc wyjść z założenia, że to pokój wszystko by uratował. Nic jednak nie robi, nie wierzy już w dobroć ludzi. Osuwa się w cień, traci wiarę w dobroć i do ostatnich momentów swojego życia pozostaje tylko szaleńcem.", "Prosi o audiencję u miejscowej administracji, powołując się na swoją byłą służbę w kapitolińskiej straży. Niewolnicy nie są zadowoleni z takiego obrotu spraw, lecz rozumieją, że być może unikną dzięki temu rozlewu krwi. Powstańcy postanawiają wykrzykiwać hasła pokojowe, maszerując ulicami miasta. Szybko jednak rozpętują się zamieszki. Nie bierze udziału w walkach, ale jego słowa i idee przyczyniają się do przyszłych negocjacji. Ostatecznie zostaje wygnany, ale jego dziedzictwo przetrwa w ideach pokojowej zmiany." },
 
                     endings = new[] { 0, 1 },
                     npcImage = npcImageRound2,
@@ -494,7 +509,7 @@ public class DialogueManager : MonoBehaviour
                     "Oh, jakże dobroduszny gest. I to dopiero rozmowa ze mną sprawiła, że obudziło się wasze sumienie? Cóż… chyba będę musiała przyjąć taką ofertę, chociaż nie ukrywam, że liczyłam na coś zgoła innego. No ale… nie można mieć wszystkiego, tak? W takim razie pozwól, że na tym zakończymy. Może jeszcze zobaczymy się w niedalekiej przyszłości, chociaż mam ku temu spore wątpliwości. ",
                     "Hm… nieczyste zagranie.(uśmiecha się pod nosem) Ale cóż innego mi pozostało… Przynajmniej będę mogła zająć się w końcu problemami swoich ludzi. Zatem… powodzenia. Może jeśli wygracie bogowie jakimś cudem oczyszczą twoje sumienie. "
                 },
-                    npcEndingDescriptions = new[] { "Flint rozczarowany wycofał się z walki.", "Flint przekazał plan — jego wynalazek zyskał nową nazwę: Iskra." },
+                    npcEndingDescriptions = new[] { "Ta cwana wydra okazała się wtyką odpowiedzialną za słabą pozycję niewolników. Podobno miała sabotować powstanie, będąc informatorką samego Imperatora! Po zamieszkach osunęła się w cień i nikt o niej już nie słyszał, mimo, że zapisała się na kartach historii jako zdrajczyni.", "Po dostaniu przepustki słuch o niej zaginął. Nie wiadomo czy dotarła na swoją planetę, czy przeżyła. Tak jakby się rozpłynęła..." },
 
                     endings = new[] { 0, 1 },
                     npcImage = npcImageRound3,
