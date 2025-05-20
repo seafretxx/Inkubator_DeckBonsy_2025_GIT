@@ -479,14 +479,14 @@ public class DialogueManager : MonoBehaviour
             case 2: //fabius
                 return new DialogueData
                 {
-                    npcLine = "Całkiem nie najgorzej grasz, moja droga. Widzę, że twój ojciec dobrze nauczył cię taktyki, co pewnie udzieli się również na polu bitwy, jednak może posłuchasz mojej rady i wykorzystasz swoje zdolności w bardziej dyplomatyczny sposób. Błagam cię całym sobą, bo to jedyne co mogę teraz zrobić. Rzymianie też potrafią współczuć, musimy im tylko wskazać drogę, pokazać, że niewolnictwo to bestialstwo. A więc jaka jest twoja decyzja?",
+                    npcLine = "Całkiem nie najgorzej grasz, moja droga. Widzę, że twój ojciec dobrze nauczył cię taktyki, co pewnie udzieli się również na polu bitwy. Jednak może posłuchasz mojej rady i wykorzystasz swoje zdolności w bardziej dyplomatyczny sposób. Błagam cię całym sobą, bo to jedyne co mogę teraz zrobić. Rzymianie też potrafią współczuć, musimy im tylko wskazać drogę, pokazać, że niewolnictwo to bestialstwo. A więc jaka jest twoja decyzja?",
                     playerChoices = new[] { "Wybieram siłę", "Wybieram pokój" },
                     playerExpandedResponses = new[] {
                     "Nasze życie się dla nich nie liczy. Jeśli powstanie ma wybuchnąć to musi być ono przeprowadzone z całą siłą, na jaką nas stać.",
                     "Może rzeczywiście uda nam się coś ugrać na drodze dyplomacji. Myślisz, że potrafiłbyś mi w tym pomóc?"
                 },
                     npcResponses = new[] {
-                    "Oh… czyli to postanowione, historia znów zatacza koło… (jego oczy wydają się puste, jakby powróciły do niego wszystkie dawne wspomnienia). (Fabius wstaje od stołu i przygląda się tobie). Wybacz, ale w takim wypadku nasze drogi muszą się tutaj rozejść. Życzę wam powodzenia, naprawdę. Ale nawet jeśli wszystko uda się wam na drodze agresji, to musisz wiedzieć, że takie wydarzenia zmieniają każdego. Niech Bogowie mają pod opieką wasze dusze… ",
+                    "Oh… czyli to postanowione, historia znów zatacza koło… (jego oczy wydają się puste, jakby powróciły do niego wszystkie dawne wspomnienia). (Fabius wstaje od stołu i przygląda się tobie). Wybacz, ale w takim wypadku nasze drogi muszą się tutaj rozejść. Życzę wam powodzenia, naprawdę. Ale nawet jeśli wszystko uda się wam na drodze agresji... Musisz wiedzieć, że takie wydarzenia zmieniają każdego. Niech Bogowie mają pod opieką wasze dusze… ",
                     "Tak! Na bogów, wiem dokładnie co robić! Audiencja. To jest to. Na szczęście masz do czynienia z byłym cenionym strażnikiem. Myślę, że uda mi się taką zorganizować. Zobaczysz, cywile też będą po naszej stronie. Przekonamy ich, no oczywiście nie wszystkich, ale to zawsze coś. "
                 },
                     npcEndingDescriptions = new[] { "Nie bierze udziału w powstaniu. Bezczynnie przygląda mu się z daleka, nie mogąc wyjść z założenia, że to pokój wszystko by uratował. Nic jednak nie robi, nie wierzy już w dobroć ludzi. Osuwa się w cień, traci wiarę w dobroć i do ostatnich momentów swojego życia pozostaje tylko szaleńcem.", "Prosi o audiencję u miejscowej administracji, powołując się na swoją byłą służbę w kapitolińskiej straży. Niewolnicy nie są zadowoleni z takiego obrotu spraw, lecz rozumieją, że być może unikną dzięki temu rozlewu krwi. Powstańcy postanawiają wykrzykiwać hasła pokojowe, maszerując ulicami miasta. Szybko jednak rozpętują się zamieszki. Nie bierze udziału w walkach, ale jego słowa i idee przyczyniają się do przyszłych negocjacji. Ostatecznie zostaje wygnany, ale jego dziedzictwo przetrwa w ideach pokojowej zmiany." },
@@ -502,7 +502,7 @@ public class DialogueManager : MonoBehaviour
                     npcLine = "No dobrze. Przyznam, że jestem w szoku. Pokonałaś w karty najbardziej przebiegłą mistrzynię. Ale cóż… zapewniam, że jedna przegrana mnie nie definiuje, poza tym… nie jesteśmy tu tak naprawdę dla kart, prawda? A więc pokaż mi co dla mnie masz.",
                     playerChoices = new[] { "Ofiaruj azyl", "Oferuj przepustkę" },
                     playerExpandedResponses = new[] {
-                    "No dobrze. Skoro tak bardzo zależy ci na potencjalnych ofiarach, myślę że możemy poświęcić kilku walczących i zorganizować dla dzieci  i bezbronnych jakiś azyl.",
+                    "No dobrze. Skoro tak bardzo zależy ci na potencjalnych ofiarach, myślę że możemy poświęcić kilku walczących i zorganizować dla dzieci i bezbronnych jakiś azyl.",
                     "Myślę, że mam coś, co mogłoby cię zainteresować… (wyciągnij przepustkę wyjścia z getta)."
                 },
                     npcResponses = new[] {
