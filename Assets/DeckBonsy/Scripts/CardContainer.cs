@@ -4,6 +4,8 @@ using TMPro;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using DG.Tweening;
+using UnityEngine.EventSystems;
+
 
 public class CardContainer : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 
@@ -96,6 +98,8 @@ public class CardContainer : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        if (inPlay) return;   //box description nw
+
         bool isMyTurn = GameManager.gameManager.GetPlayerTurn() == isPlayerCard;
         if (!isMyTurn)
             return;
@@ -119,14 +123,17 @@ public class CardContainer : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        bool isMyTurn = GameManager.gameManager.GetPlayerTurn() == isPlayerCard;
-        if (!isMyTurn)
-            return;
+        if (!ShouldShowDescription()) return;
 
         if (!inPlay && !isSelected)
         {
             transform.DOLocalMoveY(originalPosition.y + 30f, 0.2f).SetEase(Ease.OutQuad);
         }
+        else if (inPlay)
+        {
+            // karta na planszy to nie animuj
+        }
+
 
         if (isSelected)
         {
@@ -135,6 +142,11 @@ public class CardContainer : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
         if (cardInfo != null)
             HandManager.handManager.ShowCardDescription(cardInfo.cardDescription);
+    }
+
+    private bool ShouldShowDescription()
+    {
+        return inPlay || GameManager.gameManager.GetPlayerTurn() == isPlayerCard;
     }
 
     public void OnPointerExit(PointerEventData eventData)

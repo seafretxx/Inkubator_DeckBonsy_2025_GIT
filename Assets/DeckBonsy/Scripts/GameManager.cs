@@ -113,7 +113,7 @@ public class GameManager : MonoBehaviour
         endGamePanel.SetActive(false);
         restartButton.onClick.AddListener(RestartGame);
 
-        scoreToWin = 3;
+        scoreToWin = 30;
         isCardBeingPlayed = false;
         chosenCard = false;
         chosenColumn = false;
@@ -143,6 +143,7 @@ public class GameManager : MonoBehaviour
     public void StartRound(int round)
     {
         currentRound = round;
+        scoreToWin = 30 + (round * 10);
         // Resetuj planszę, dobierz karty itd.
         playerBoard.ClearBoard(); 
         enemyBoard.ClearBoard();
@@ -639,3 +640,4 @@ public class GameManager : MonoBehaviour
     }
 
 }
+

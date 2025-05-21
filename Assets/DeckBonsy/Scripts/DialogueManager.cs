@@ -19,7 +19,8 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private List<Button> choiceButtons;
     [SerializeField] private Image npcImageHolder;
     [SerializeField] private Image backgroundImageHolder;
-
+    [SerializeField] private Sprite npcImageIntro;
+    [SerializeField] private Sprite backgroundImageIntro;
     [SerializeField] private Button continueIndicator;
     private Image indicatorImage;
 
@@ -91,7 +92,7 @@ public class DialogueManager : MonoBehaviour
             case 0: //triceps (nie dziala, przeniesc do sceny po tutorialu)
                 return new DialogueData
                 {
-                    npcLine = "No już, siadaj do stołu, przekonajmy się na kogo wychował Cię największy twardziel jakiego było mi dane poznać. Prawdziwą wojowniczkę można poznać tylko na polu bitwy. Może karty to nie to samo co dobra bitka wręcz, ale lepsze to niż gadanie o sandałach imperatora.",
+                    npcLine = "No już, siadaj do stołu, przekonajmy się na kogo wychował Cię największy twardziel jakiego było mi dane poznać. Prawdziwą wojowniczkę można poznać tylko na polu bitwy. Może karty to nie to samo co dobra bitka wręcz, ale lepsze to niż gadanie o sandałach imperatora. Żeby ze mną wygrać, potrzebujesz 30 punktów.",
                     playerChoices = new string[0],
                     endings = new int[0],
                     npcImage = npcImageRound0,
@@ -100,7 +101,7 @@ public class DialogueManager : MonoBehaviour
             case 1: //flint
                 return new DialogueData
                 {
-                    npcLine = "Hmmm, trzy razy sześć to będzie osiemnaście, mniej więcej tyle zapalniczek dziennie trafia na odrzut, a to wszystko z powodu jakiejś drobnej wady. Wyniosłem ich z fabryki już wystarczającą ilość, żeby zacząć pracować nad prototypem! Twój ojciec był zawsze sceptyczny w stosunku do moich wynalazków, ale w twoich oczach widzę… iskrę, iskrę która roznieci tutaj ogień. A jeśli chodzi o pożary to nie mogłaś trafić lepiej! Siadaj zagrajmy jak piroman z piromanem, hahaha!",
+                    npcLine = "Hmmm, trzy razy sześć to będzie osiemnaście, mniej więcej tyle zapalniczek dziennie trafia na odrzut, a to wszystko z powodu jakiejś drobnej wady. Wyniosłem ich z fabryki już wystarczającą ilość, żeby zacząć pracować nad prototypem! Twój ojciec był zawsze sceptyczny w stosunku do moich wynalazków, ale w twoich oczach widzę… iskrę, iskrę która roznieci tutaj ogień. A jeśli chodzi o pożary to nie mogłaś trafić lepiej! Siadaj zagrajmy jak piroman z piromanem, hahaha! Gramy do 40 punktów!",
                     playerChoices = new string[0],
                     endings = new int[0],
                     npcImage = npcImageRound1,
@@ -110,7 +111,7 @@ public class DialogueManager : MonoBehaviour
             case 2: //fabius
                 return new DialogueData
                 {
-                    npcLine = "Śmierć twojego ojca jest wielką stratą, nie tylko dla waszego gatunku... Mądry był z niego towarzysz, a jak się z nim grało w deckbonsy! Wiem, że ciężko jest w to uwierzyć, w końcu jestem strażnikiem, ale za czasów mojej służby cieliśmy z Twoim starszym w karty jak równy z równym. Może moja kondycja nie jest jak dawniej, ale uwierz mi… mój umysł nadal pracuje. widzę co się dzieje. ta agresja… Wiem, że jesteście wściekli,, ale politycy… oni są bezwzględni. Życia tylu ludzi…niewolników, cywili, nie znaczą dla nich więcej niż ten piach (kopie w ziemię z rezygnacją)… Może jest jakieś pokojowe wyjście, które pomoże nam uniknąć masakry.  Jestem w stanie zaoferować swoją pomoc!",
+                    npcLine = "Śmierć twojego ojca jest wielką stratą, nie tylko dla waszego gatunku... Mądry był z niego towarzysz, a jak się z nim grało w deckbonsy! Wiem, że ciężko jest w to uwierzyć, w końcu jestem strażnikiem, ale za czasów mojej służby cieliśmy z Twoim starszym w karty jak równy z równym. Może moja kondycja nie jest jak dawniej, ale uwierz mi… mój umysł nadal pracuje. widzę co się dzieje. ta agresja… Wiem, że jesteście wściekli,, ale politycy… oni są bezwzględni. Życia tylu ludzi…niewolników, cywili, nie znaczą dla nich więcej niż ten piach… Może jest jakieś pokojowe wyjście, które pomoże nam uniknąć masakry.  Jestem w stanie zaoferować swoją pomoc! Myślę, że dasz radę grać do 50 punktów!",
                     playerChoices = new string[0],
                     endings = new int[0],
                     npcImage = npcImageRound2,
@@ -120,7 +121,7 @@ public class DialogueManager : MonoBehaviour
             case 3: //minerva
                 return new DialogueData
                 {
-                    npcLine = "Proszę proszę… Nowy przedstawiciel wielkiego wyzwolenia. Widzę, że jak na razie wasze irracjonalne plany się nie zmieniają. Ale cóż… nie każdy myśli o tych najsłabszych, których czeka największe niebezpieczeństwo… albo o tych, których nie do końca interesują losy waszej rasy. Ale do rzeczy. Twój ojciec twierdził, że ma dla mnie całkiem nie najgorszy układ. Mam nadzieję, że masz w sobie tyle rozumu co on i zaoferujesz mi coś co będzie korzystne nie tylko dla ciebie, ale i dla mnie. Może moja przychylność do was nie niesie za sobą niczego wielkiego, ale jej brak… Nie wiem czy ryzykowałabym go doświadczać.",
+                    npcLine = "Proszę proszę… Nowy przedstawiciel wielkiego wyzwolenia. Widzę, że jak na razie wasze irracjonalne plany się nie zmieniają. Ale cóż… nie każdy myśli o tych najsłabszych, których czeka największe niebezpieczeństwo… albo o tych, których nie do końca interesują losy waszej rasy. Ale do rzeczy. Twój ojciec twierdził, że ma dla mnie całkiem nie najgorszy układ. Mam nadzieję, że masz w sobie tyle rozumu co on i zaoferujesz mi coś co będzie korzystne nie tylko dla ciebie, ale i dla mnie. Może moja przychylność do was nie niesie za sobą niczego wielkiego, ale jej brak… Nie wiem czy ryzykowałabym go doświadczać. Spróbuj ze mną wygrać, moja stawka to 60 punktów.",
                     playerChoices = new string[0],
                     endings = new int[0],
                     npcImage = npcImageRound3,
@@ -196,21 +197,26 @@ public class DialogueManager : MonoBehaviour
     private List<string> SplitIntoSentences(string text)
     {
         var sentences = new List<string>();
-        string[] parts = text.Split(new[] { ". ", "? ", "! " }, StringSplitOptions.None);
 
-        foreach (var part in parts)
+        var matches = System.Text.RegularExpressions.Regex.Matches(
+            text,
+            @"[^.!?]+(?:[.!?]+|\.\.\.)"
+        );
+
+        foreach (System.Text.RegularExpressions.Match match in matches)
         {
-            if (!string.IsNullOrWhiteSpace(part))
+            string trimmed = match.Value.Trim();
+            if (!string.IsNullOrEmpty(trimmed))
             {
-                string trimmed = part.Trim();
-                if (!trimmed.EndsWith(".") && !trimmed.EndsWith("?") && !trimmed.EndsWith("!"))
-                    trimmed += ".";
                 sentences.Add(trimmed);
             }
         }
 
         return sentences;
     }
+
+
+
 
     private Coroutine blinkCoroutine;
     private bool hasClickedContinue = false;
@@ -389,7 +395,7 @@ public class DialogueManager : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
 
         npcText.text = "";
-        npcText.color = new Color32(255, 221, 153, 255); // hex: #FFDD99
+        npcText.color = new Color32(28, 2, 2, 255); //#1C0202
 
         List<string> npcSentences = SplitIntoSentences(npcLine);
         foreach (string sentence in npcSentences)
@@ -520,6 +526,17 @@ public class DialogueManager : MonoBehaviour
             default:
                 return null;
         }
+    }
+    public DialogueData GetPreGameIntro()
+    {
+        return new DialogueData
+        {
+            npcLine = "Psst! Tutaj! Usiądź i słuchaj uważnie, moja droga. Siedź cicho i chłoń każde moje słowo, bo stawka jest naprawdę wysoka. To czego zaraz się nauczysz może być kluczem do waszej wolności. Kim jestem? Nieważne, dowiesz się w swoim czasie. Jedyne co musisz wiedzieć, to że znałem dobrze twojego ojca. Słyszałem, że znalazłaś jego dziennik. Teraz jest twój, wykorzystaj go dobrze. Ten cwany lis zapisywał wszystko o wszystkich, to bardzo pomoże teraz, kiedy szykuje się nam powstanie. Swoją drogą, moje kondolencje…Tak młodo musisz sobie z tym wszystkim radzić… Ekhem… Posłuchaj, nie mogę spędzić tu zbyt wiele czasu. Moja rola w powstaniu jest… Powiedzmy, że trochę z innej strony. Potrzebuję jednak twojej pomocy. Wiem,że chcesz pomóc, wiem też, że masz w sobie ducha walki i tak jak twój ojciec, na pewno wybierzesz dobrze. Umówiłem cię na spotkanie z przedstawicielami ruchu oporu. Każdy jest inny, nie każdemu powinnaś ufać w stu procentach. Oni zaufają ci dopiero jak zagrasz z nimi w Deckbonsy. Tak, tak, wiem, że nie wiesz jak w nie grać. Nie jest to trudne, masz już talie po swoim ojcu. Niestety nie mam czasu, żeby z tobą zagrać. Szybko załapiesz o co chodzi. Pamiętaj tylko, że karty o tej samej jednostce w jednej kolumnie się mnożą. I kradniesz karty o tej samej jednostce z naprzeciwka przeciwnika. Wszystkie inne efekty kart będą widoczne. W tej grze stawka jest wysoka. Pierwsza zasada niezwiązana bezpośrednio z rozgrywką: koniecznie musisz wygrać. Traktuj to wszystko jak bitwę, którą macie niebawem stoczyć. Życie albo śmierć. No dobrze. Nauczysz się w praktyce. Spróbuj wygrać swoją pierwszą rozgrywkę. Zajrzyj do dziennika, te wszystkie osoby są tam na pewno rozpisane. I podejmuj dobre decyzje, to może wszystko odmienić. Gra skończy się w momencie kiedy wszystkie miejsca na planszy zostaną zapełnione lub któryś z graczy osiągnie daną liczbę punktów. Powodzenia młoda. ",
+            playerChoices = new string[0],
+            endings = new int[0],
+            npcImage = npcImageIntro, 
+            backgroundImage = backgroundImageIntro
+        };
     }
 
     public void EndDialogue()

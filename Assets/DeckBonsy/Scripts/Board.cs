@@ -1,5 +1,6 @@
 ﻿using UnityEngine.UI;
 using UnityEngine;
+using DG.Tweening;
 using System.Collections.Generic;
 
 public class Board : MonoBehaviour
@@ -88,6 +89,9 @@ public class Board : MonoBehaviour
                 GameObject newCard = Instantiate(addedCard);
                 RectTransform newCardRect = newCard.GetComponent<RectTransform>();
 
+                DOTween.Kill(addedCard.transform); // przerwij wszelkie aktywne tweeny przed doaniem karty na plansze
+
+
                 newCardRect.SetParent(boardSpots[columnIndex, i], false);
                 newCardRect.anchoredPosition = Vector2.zero;
                 newCardRect.localRotation = Quaternion.identity;
@@ -106,11 +110,12 @@ public class Board : MonoBehaviour
 
                 foreach (var graphic in newCard.GetComponentsInChildren<Graphic>())
                 {
-                    graphic.raycastTarget = false;
+                    graphic.raycastTarget = true;         //tutaj box description  
                 }
                 if (newCard.TryGetComponent<Button>(out var btn))
                 {
-                    btn.interactable = false;
+                    //btn.interactable = false;
+                    Destroy(btn);
                 }
 
                 placedCards[columnIndex, i] = newContainer.GetCardInfo();
@@ -196,8 +201,12 @@ public class Board : MonoBehaviour
             occupiedBoardSpots[column, toRow] = true;
             occupiedBoardSpots[column, fromRow] = false;
 
+           
+            cardObj.transform.SetParent(boardSpots[column, toRow], false);
+            RectTransform cardRect = cardObj.GetComponent<RectTransform>();
+            cardRect.anchoredPosition = Vector2.zero;                                                 //3 linijski dodane
+
             container.SetRowIndex(toRow);
-            cardObj.transform.position = boardSpots[column, toRow].position;
             placedCards[column, toRow] = placedCards[column, fromRow];
             placedCards[column, fromRow] = null;
             placedCardsObjects[column, toRow] = cardObj;

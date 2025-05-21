@@ -37,16 +37,35 @@ public class IntroStarter : MonoBehaviour
             yield break;
         }
 
-        var intro = dialogueManager.GetIntroDialogueForRound(0);
-        if (intro == null)
+        var preGameIntro = dialogueManager.GetPreGameIntro();
+        if (preGameIntro != null)
         {
-            yield break;
+            SetGameReady(false);
+            dialogueManager.StartDialogue(preGameIntro);
+            dialogueManager.OnDialogueEnd += OnPreIntroEnded;
         }
-
-        SetGameReady(false);
-        dialogueManager.StartDialogue(intro);
-        dialogueManager.OnDialogueEnd += OnIntroEnded;
+        else
+        {
+            StartMainIntro(); // fallback
+        }
     }
+    private void OnPreIntroEnded()
+    {
+        dialogueManager.OnDialogueEnd -= OnPreIntroEnded;
+        StartMainIntro();
+    }
+
+    private void StartMainIntro()
+    {
+        var intro = dialogueManager.GetIntroDialogueForRound(0);
+        if (intro != null)
+        {
+            SetGameReady(false);
+            dialogueManager.StartDialogue(intro);
+            dialogueManager.OnDialogueEnd += OnIntroEnded;
+        }
+    }
+
 
     private void OnIntroEnded()
     {
