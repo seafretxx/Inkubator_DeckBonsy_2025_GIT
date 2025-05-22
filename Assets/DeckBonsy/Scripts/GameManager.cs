@@ -103,6 +103,7 @@ public class GameManager : MonoBehaviour
         }
 
         ShowIntroDialogueForRound();
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
 
@@ -638,6 +639,28 @@ public class GameManager : MonoBehaviour
     {
         return npcEndingTexts.TryGetValue(npcId, out var text) ? text : "Brak danych o zakończeniu.";
     }
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (dialogueManager == null)
+            dialogueManager = FindFirstObjectByType<DialogueManager>();
+
+        if (playerBoard == null || enemyBoard == null)
+        {
+            var boards = FindObjectsByType<Board>(FindObjectsSortMode.None);
+            foreach (var board in boards)
+            {
+                if (board.CompareTag("PlayerBoard")) playerBoard = board;
+                else if (board.CompareTag("EnemyBoard")) enemyBoard = board;
+            }
+        }
+
+        if (DeckManager.deckManager == null)
+            Debug.LogError("Nie ma deck managera!");
+
+        if (HandManager.handManager == null)
+            Debug.LogError("Nie ma hand manadziera");
+    }
+
 
 }
 

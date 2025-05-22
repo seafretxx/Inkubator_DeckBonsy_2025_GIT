@@ -9,31 +9,31 @@ public class IntroStarter : MonoBehaviour
     [SerializeField] private GameObject startGameButton;
     [SerializeField] private GameObject journalButton;
 
-
-
-
     private bool introEnded = false;
     private bool waitingForPlayerInput = false;
 
     private void Start()
     {
-        if (GameManager.gameManager.CurrentRound != 0)
-        {
-            this.enabled = false;
-            return;
-        }
-
         StartCoroutine(DelayedIntro());
     }
 
-
     private IEnumerator DelayedIntro()
     {
-        yield return null;
+        // czeka aż gameManager i dialogueManager pojawią się w scenie
+        yield return new WaitUntil(() => GameManager.gameManager != null && FindFirstObjectByType<DialogueManager>() != null);
 
-        if (dialogueManager == null || gameManager == null)
+        gameManager = GameManager.gameManager;
+        dialogueManager = FindFirstObjectByType<DialogueManager>();
+
+        if (gameManager == null || dialogueManager == null)
         {
-            Debug.LogError("DialogueManager lub GameManager nie przypisany!");
+            Debug.LogError("❌ GameManager lub DialogueManager nadal nie znaleziony!");
+            yield break;
+        }
+
+        if (gameManager.CurrentRound != 0)
+        {
+            this.enabled = false;
             yield break;
         }
 
@@ -49,6 +49,7 @@ public class IntroStarter : MonoBehaviour
             StartMainIntro(); // fallback
         }
     }
+
     private void OnPreIntroEnded()
     {
         dialogueManager.OnDialogueEnd -= OnPreIntroEnded;
@@ -66,24 +67,21 @@ public class IntroStarter : MonoBehaviour
         }
     }
 
-
     private void OnIntroEnded()
     {
         dialogueManager.OnDialogueEnd -= OnIntroEnded;
         introEnded = true;
         waitingForPlayerInput = true;
-        //StartGame();
     }
 
     private void Update()
     {
         if (!waitingForPlayerInput) return;
 
-      // (fallback) automatycznie po 1.5 sekundach
         if (introEnded)
         {
             StartCoroutine(AutoStartAfterDelay(1f));
-            introEnded = false; // zabezpieczenie, żeby tylko raz
+            introEnded = false;
         }
     }
 
@@ -99,11 +97,12 @@ public class IntroStarter : MonoBehaviour
     public void StartGame()
     {
         if (dialoguePanel != null)
-            dialoguePanel.SetActive(false); // zamknij dialog
+            dialoguePanel.SetActive(false);
 
         SetGameReady(false);
         SetStartCardGameAfterIntro(true);
         SetCurrentRound(0);
+
         if (startGameButton != null)
             startGameButton.SetActive(false);
 
@@ -112,23 +111,16 @@ public class IntroStarter : MonoBehaviour
             journalButton.SetActive(true);
 
             var display = FindFirstObjectByType<JournalDisplayManager>();
-            if (display != null && gameManager.CurrentRound == 0)
+            if (display != null)
             {
-                display.SetMaxPageIndex(0); // zablokuj inne strony
-            }
-
-            journalButton.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() =>
-            {
-                var display = FindFirstObjectByType<JournalDisplayManager>();
-                if (display != null)
+                display.SetMaxPageIndex(0);
+                journalButton.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() =>
                 {
-                    display.OpenJournal(0); // otwórz stronę 0
-                }
-            });
+                    display.OpenJournal(0);
+                });
+            }
         }
-
     }
-
 
     private void SetGameReady(bool value)
     {

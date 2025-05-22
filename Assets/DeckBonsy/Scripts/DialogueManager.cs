@@ -111,7 +111,7 @@ public class DialogueManager : MonoBehaviour
             case 2: //fabius
                 return new DialogueData
                 {
-                    npcLine = "Śmierć twojego ojca jest wielką stratą, nie tylko dla waszego gatunku... Mądry był z niego towarzysz, a jak się z nim grało w deckbonsy! Wiem, że ciężko jest w to uwierzyć, w końcu jestem strażnikiem, ale za czasów mojej służby cieliśmy z Twoim starszym w karty jak równy z równym. Może moja kondycja nie jest jak dawniej, ale uwierz mi… mój umysł nadal pracuje. widzę co się dzieje. ta agresja… Wiem, że jesteście wściekli,, ale politycy… oni są bezwzględni. Życia tylu ludzi…niewolników, cywili, nie znaczą dla nich więcej niż ten piach… Może jest jakieś pokojowe wyjście, które pomoże nam uniknąć masakry.  Jestem w stanie zaoferować swoją pomoc! Myślę, że dasz radę grać do 50 punktów!",
+                    npcLine = "Śmierć twojego ojca jest wielką stratą, nie tylko dla waszego gatunku... Mądry był z niego towarzysz, a jak się z nim grało w deckbonsy! Wiem, że ciężko jest w to uwierzyć, w końcu jestem strażnikiem, ale za czasów mojej służby cieliśmy z Twoim starszym w karty jak równy z równym. Może moja kondycja nie jest jak dawniej, ale uwierz mi… mój umysł nadal pracuje. widzę co się dzieje. ta agresja… Wiem, że jesteście wściekli, ale politycy… oni są bezwzględni. Życia tylu ludzi…niewolników, cywili, nie znaczą dla nich więcej niż ten piach… Może jest jakieś pokojowe wyjście, które pomoże nam uniknąć masakry.  Jestem w stanie zaoferować swoją pomoc! Myślę, że dasz radę grać do 50 punktów!",
                     playerChoices = new string[0],
                     endings = new int[0],
                     npcImage = npcImageRound2,

@@ -4,7 +4,6 @@ using TMPro;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using DG.Tweening;
-using UnityEngine.EventSystems;
 
 
 public class CardContainer : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler

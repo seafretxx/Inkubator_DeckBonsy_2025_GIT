@@ -493,8 +493,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Kali Mr\xF3z \n\n\nNatalia Wysocka\n\n\nWiktoria Mohrhardt\n\n\nPaulina
-    Sa\u0142ek"
+  m_text: "Natalia Wysocka\n\n\nPaulina Sa\u0142ek\n\n\nWiktoria Mohrhardt\n\n\nKali
+    Mr\xF3z"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b1721dedc5d48ce4e837be680e6f0fed, type: 2}
   m_sharedMaterial: {fileID: 4201655790394336326, guid: b1721dedc5d48ce4e837be680e6f0fed, type: 2}
@@ -590,7 +590,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &485078506
 RectTransform:
   m_ObjectHideFlags: 0
